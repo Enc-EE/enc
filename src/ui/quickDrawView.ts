@@ -1,0 +1,22 @@
+import { RenderObject } from "./renderObject";
+import { Rectangle } from "../geometry/rectangle";
+
+export class QuickDrawView extends RenderObject {
+    public bounds: Rectangle;
+
+    constructor(renderMethod: (ctx: CanvasRenderingContext2D, bounds: Rectangle) => void) {
+        super();
+        this.renderMethod = renderMethod;
+    }
+
+    public renderMethod: (ctx: CanvasRenderingContext2D, bounds: Rectangle) => void;
+
+    public render(ctx: CanvasRenderingContext2D): void {
+        this.renderMethod(ctx, this.bounds);
+    }
+
+    mouseMove(ev: MouseEvent): void {
+    }
+    click(ev: MouseEvent): void {
+    }
+}

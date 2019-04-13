@@ -1,0 +1,19 @@
+{
+  "name": "enc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Enc-EE/enc.git"
+  },
+  "author": "Eric Eichhorn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Enc-EE/enc/issues"
+  },
+  "homepage": "https://github.com/Enc-EE/enc#readme"
+}
