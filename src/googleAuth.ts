@@ -1,17 +1,17 @@
 import { EEvent, EEventT } from "./eEvent";
 
-// // todo gapi dependency
-// namespace gapi {
-//     export function load(x: any, y: any) { }
-// }
-// namespace gapi.auth2 {
-//     export class GoogleAuth {
-//         public signIn(x: any): any { }
-//         public signOut(): any { }
-//     }
-//     export class GoogleUser { }
-//     export function init(x: any): any { }
-// }
+// todo gapi dependency
+namespace gapi {
+    export function load(x: any, y: any) { }
+}
+namespace gapi.auth2 {
+    export class GoogleAuth {
+        public signIn(x: any): any { }
+        public signOut(): any { }
+    }
+    export class GoogleUser { }
+    export function init(x: any): any { }
+}
 
 export class GoogleAuth {
     private auth2: gapi.auth2.GoogleAuth;
