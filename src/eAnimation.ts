@@ -11,7 +11,7 @@ export class EAnimation {
         this.setFps(30);
         this.play();
         document.addEventListener('keyup', (event) => {
-            if (event.keyCode == 80) {
+            if (event.keyCode == 80) { // p
                 this.playPause();
             }
         });

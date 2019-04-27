@@ -1,5 +1,18 @@
 import { EEvent, EEventT } from "./eEvent";
 
+// // todo gapi dependency
+// namespace gapi {
+//     export function load(x: any, y: any) { }
+// }
+// namespace gapi.auth2 {
+//     export class GoogleAuth {
+//         public signIn(x: any): any { }
+//         public signOut(): any { }
+//     }
+//     export class GoogleUser { }
+//     export function init(x: any): any { }
+// }
+
 export class GoogleAuth {
     private auth2: gapi.auth2.GoogleAuth;
     private loginDiv: HTMLDivElement;
@@ -31,7 +44,7 @@ export class GoogleAuth {
     }
 
     private loginDivClick = () => {
-        this.auth2.signIn({ redirect_uri: window.location.href, scope: "profile" }).then((googleUser) => {
+        this.auth2.signIn({ redirect_uri: window.location.href, scope: "profile" }).then((googleUser: gapi.auth2.GoogleUser) => {
             console.log('login successful');
             this.loggedIn.dispatchEvent(googleUser);
         });

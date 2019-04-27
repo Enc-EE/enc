@@ -3,7 +3,7 @@ import { Rectangle } from "../../geometry/rectangle";
 
 export abstract class LayoutView extends RenderObject {
     protected children: RenderObject[] = [];
-    private shouldUpdateLayout: boolean;
+    private shouldUpdateLayout = false;
 
     public render(ctx: CanvasRenderingContext2D) {
         if (this.shouldUpdateLayout) {

@@ -1,7 +1,7 @@
 import { ECanvas } from "./eCanvas";
 import { Rectangle } from "../geometry/rectangle";
-import { RenderObject } from "./renderObject";
 import { LayoutView } from "./layoutControls/layoutView";
+import { EAnimation } from "../eAnimation";
 
 export class Stage {
     private view: LayoutView;
@@ -11,6 +11,14 @@ export class Stage {
         canvas.addDrawFunction(this.render);
         document.addEventListener("mousemove", this.mouseMove);
         document.addEventListener("click", this.click);
+    }
+
+    public static create(): Stage {
+        var canvas = ECanvas.createFullScreen();
+        var stage = new Stage(canvas);
+        var animation = new EAnimation();
+        animation.addUpdateFunction(canvas.draw);
+        return stage;
     }
 
     private mouseMove = (ev: MouseEvent) => {
