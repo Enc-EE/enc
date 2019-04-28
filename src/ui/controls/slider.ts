@@ -32,10 +32,10 @@ export class Slider extends Control {
         ctx.lineTo(x + this.bounds.width - this.radius, y + this.bounds.height / 2);
         ctx.stroke();
 
-        var relValue = this.currentValue / (this.maxValue - this.minValue);
+        var relValue = (this.currentValue - this.minValue) / (this.maxValue - this.minValue);
         ctx.fillStyle = "blue";
         ctx.beginPath();
-        ctx.arc(x + + this.radius + (this.bounds.width - this.radius * 2) * relValue, y + this.bounds.height / 2, this.radius, 0, Math.PI * 2);
+        ctx.arc(x + this.radius + (this.bounds.width - this.radius * 2) * relValue, y + this.bounds.height / 2, this.radius, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
     }
@@ -49,7 +49,7 @@ export class Slider extends Control {
     public mouseUp = (ev: MouseEvent) => {
         this.isDragging = false;
     }
-    
+
     public mouseMove(ev: MouseEvent) {
         super.mouseMove(ev);
         if (this.isDragging) {
@@ -59,7 +59,7 @@ export class Slider extends Control {
 
     private updateCurrentValue(ev: MouseEvent) {
         var val = ev.clientX - this.bounds.x - this.radius;
-        val = val / (this.bounds.width - this.radius * 2) * this.maxValue;
+        val = val / (this.bounds.width - this.radius * 2) * (this.maxValue - this.minValue) + this.minValue;
         if (val > this.maxValue) {
             val = this.maxValue;
         }
