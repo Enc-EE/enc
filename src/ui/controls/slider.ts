@@ -44,8 +44,6 @@ export class Slider extends Control {
         if (this.bounds.isHitBy(ev.clientX, ev.clientY)) {
             this.isDragging = true;
             this.updateCurrentValue(ev);
-            console.log(this.id);
-            
         }
     }
     public mouseUp = (ev: MouseEvent) => {
@@ -55,7 +53,6 @@ export class Slider extends Control {
     public mouseMove(ev: MouseEvent) {
         super.mouseMove(ev);
         if (this.isDragging) {
-            console.log(this.id);
             this.updateCurrentValue(ev);
         }
     }
