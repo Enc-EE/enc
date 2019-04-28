@@ -13,7 +13,7 @@ export abstract class Control extends RenderObject {
 
     public abstract align(ctx: CanvasRenderingContext2D, position: Point): void;
 
-    public mouseMove = (ev: MouseEvent) => {
+    public mouseMove(ev: MouseEvent) {
         if (this.isEnabled) {
             if (this.bounds.isHitBy(ev.clientX, ev.clientY)) {
                 this.isMouseOver = true;

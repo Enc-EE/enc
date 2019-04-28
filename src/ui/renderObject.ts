@@ -19,6 +19,8 @@ export abstract class RenderObject {
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
     public abstract render(ctx: CanvasRenderingContext2D): void;
 
+    abstract mouseDown(ev: MouseEvent): void;
+    abstract mouseUp(ev: MouseEvent): void;
     abstract mouseMove(ev: MouseEvent): void;
     abstract click(ev: MouseEvent): void;
 }

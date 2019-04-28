@@ -2,6 +2,10 @@ import { RenderObject } from "./renderObject";
 import { Rectangle } from "../geometry/rectangle";
 
 export class QuickDrawView extends RenderObject {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
     public bounds: Rectangle;
 
     constructor(renderMethod: (ctx: CanvasRenderingContext2D, bounds: Rectangle) => void) {

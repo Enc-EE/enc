@@ -76,8 +76,6 @@ export class ListView extends LayoutView {
             }
             if (this.controls.contains(child as Control)) {
                 var control = child as Control;
-                console.log(y);
-                
                 control.align(ctx, new Point(x, y))
                 y += control.bounds.height;
                 height += control.bounds.height;

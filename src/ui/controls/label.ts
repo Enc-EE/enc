@@ -3,6 +3,10 @@ import { Point } from "../../geometry/Point";
 import { Rectangle } from "../../geometry/rectangle";
 
 export class Label extends Control {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
     public fontSize: number = 30;
     public text: string;
 

@@ -3,6 +3,10 @@ import { Control } from "./control";
 import { Point } from "../../geometry/Point";
 
 export class EImage extends Control {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
     private image: HTMLImageElement;
     public scale = 1;
     private isLoaded = false;

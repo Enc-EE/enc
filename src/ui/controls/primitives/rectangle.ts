@@ -3,6 +3,10 @@ import { Point } from "../../../geometry/Point";
 import { Rectangle } from "../../../geometry/rectangle";
 
 export class CRectangle extends Control {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
     public width = 100;
     public height = 100;
     public fillStyle = "black";

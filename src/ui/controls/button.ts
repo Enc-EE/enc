@@ -6,6 +6,10 @@ import { HorizontalAlignementOption } from "../alignement/horizontalAlignementOp
 import { VerticalAlignementOption } from "../alignement/verticalAlignementOption";
 
 export class Button extends Control {
+    mouseDown(ev: MouseEvent): void {
+    }
+    mouseUp(ev: MouseEvent): void {
+    }
     public properties = new ButtonProperties();
     public text: string;
     public isVisible = true;
@@ -37,7 +41,6 @@ export class Button extends Control {
         var size = ctx.measureText(this.text);
 
         var bounds = new Rectangle(0, 0, size.width, this.properties.fontSize);
-        console.log(this.alignement);
         
         switch (this.alignement.horizontalAlign) {
             case HorizontalAlignementOption.Left:

@@ -9,6 +9,8 @@ export class Stage {
 
     constructor(private canvas: ECanvas) {
         canvas.addDrawFunction(this.render);
+        document.addEventListener("mousedown", this.mousedown);
+        document.addEventListener("mouseup", this.mouseup);
         document.addEventListener("mousemove", this.mouseMove);
         document.addEventListener("click", this.click);
     }
@@ -21,8 +23,22 @@ export class Stage {
         return stage;
     }
 
+    private mousedown = (ev: MouseEvent) => {
+        if (this.view) {
+            this.view.mouseDown(ev);
+        }
+    }
+
+    private mouseup = (ev: MouseEvent) => {
+        if (this.view) {
+            this.view.mouseUp(ev);
+        }
+    }
+
     private mouseMove = (ev: MouseEvent) => {
-        this.view.mouseMove(ev);
+        if (this.view) {
+            this.view.mouseMove(ev);
+        }
     }
 
     private click = (ev: MouseEvent) => {

@@ -24,6 +24,18 @@ export abstract class LayoutView extends RenderObject {
         this.shouldUpdateLayout = true;
     }
 
+    public mouseDown(ev: MouseEvent) {
+        for (const child of this.children) {
+            child.mouseDown(ev);
+        }
+    }
+
+    public mouseUp(ev: MouseEvent) {
+        for (const child of this.children) {
+            child.mouseUp(ev);
+        }
+    }
+
     public mouseMove(ev: MouseEvent) {
         for (const child of this.children) {
             child.mouseMove(ev);
