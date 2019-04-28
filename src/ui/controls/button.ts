@@ -2,14 +2,13 @@ import { Rectangle } from "../../geometry/rectangle";
 import { Control } from "./control";
 import { Point } from "../../geometry/Point";
 import { ButtonProperties } from "./primitives/buttonProperties";
+import { HorizontalAlignementOption } from "../alignement/horizontalAlignementOption";
+import { VerticalAlignementOption } from "../alignement/verticalAlignementOption";
 
 export class Button extends Control {
     public properties = new ButtonProperties();
     public text: string;
     public isVisible = true;
-
-    public horizontalAlign: "left" | "center" | "right" = "center";
-    public verticalAlign: "top" | "center" | "bottom" = "center";
 
     public render = (ctx: CanvasRenderingContext2D) => {
         if (this.isVisible) {
@@ -38,26 +37,27 @@ export class Button extends Control {
         var size = ctx.measureText(this.text);
 
         var bounds = new Rectangle(0, 0, size.width, this.properties.fontSize);
-
-        switch (this.horizontalAlign) {
-            case "left":
+        console.log(this.alignement);
+        
+        switch (this.alignement.horizontalAlign) {
+            case HorizontalAlignementOption.Left:
                 bounds.x = position.x;
                 break;
-            case "center":
+            case HorizontalAlignementOption.Center:
                 bounds.x = position.x - size.width / 2;
                 break;
-            case "right":
+            case HorizontalAlignementOption.Right:
                 bounds.x = position.x - size.width;
                 break;
         }
-        switch (this.verticalAlign) {
-            case "top":
+        switch (this.alignement.verticalAlign) {
+            case VerticalAlignementOption.Top:
                 bounds.y = position.y;
                 break;
-            case "center":
+            case VerticalAlignementOption.Center:
                 bounds.y = position.y - this.properties.fontSize / 2;
                 break;
-            case "bottom":
+            case VerticalAlignementOption.Bottom:
                 bounds.y = position.y - this.properties.fontSize;
                 break;
         }

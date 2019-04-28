@@ -2,11 +2,14 @@ import { RenderObject } from "../renderObject";
 import { Point } from "../../geometry/Point";
 import { ECanvas } from "../eCanvas";
 import { EEventT } from "../../eEvent";
+import { Alignement } from "../alignement/alignement";
 
 export abstract class Control extends RenderObject {
     protected isMouseOver = false;
     public isEnabled = true;
     public clicked = new EEventT<Control>();
+
+    public alignement = new Alignement();
 
     public abstract align(ctx: CanvasRenderingContext2D, position: Point): void;
 

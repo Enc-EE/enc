@@ -1,9 +1,12 @@
 import { RenderObject } from "../renderObject";
 import { Rectangle } from "../../geometry/rectangle";
+import { Alignement } from "../alignement/alignement";
 
 export abstract class LayoutView extends RenderObject {
     protected children: RenderObject[] = [];
     private shouldUpdateLayout = false;
+    
+    public alignement = new Alignement();
 
     public render(ctx: CanvasRenderingContext2D) {
         if (this.shouldUpdateLayout) {
