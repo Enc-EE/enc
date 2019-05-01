@@ -21,8 +21,6 @@ export class ListView extends LayoutView {
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         super.updateLayout(ctx, bounds);
 
-        console.log("updating listView layout");
-
         var x = this.alignement.calculateDimensionsX(bounds, this.dimensions.width);
         var y = this.alignement.calculateDimensionsY(bounds, this.dimensions.height);
 
@@ -36,7 +34,7 @@ export class ListView extends LayoutView {
                 height += this.spacing;
             }
             child.updateLayout(ctx, new Rectangle(x, y, 0, 0));
-            y += child.bounds.height;
+            y += child.dimensions.height;
             height += child.dimensions.height;
             width = Math.max(width, child.dimensions.width);
         }
