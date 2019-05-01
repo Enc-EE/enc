@@ -33,11 +33,7 @@ export class PanAndZoomView extends LayoutView {
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
         this.bounds = bounds;
         for (const child of this.children) {
-            if (child as LayoutView && (child as LayoutView).updateLayout) {
-                (child as LayoutView).updateLayout(ctx, (child as LayoutView).bounds);
-            } else if (child as Control && (child as Control).align) {
-                // (child as Control).align(ctx, new Point((child as Control).bounds.x, (child as Control).bounds.y));
-            }
+            child.updateLayout(ctx, child.bounds);
         }
     }
 

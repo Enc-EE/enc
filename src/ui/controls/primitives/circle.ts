@@ -3,10 +3,6 @@ import { Point } from "../../../geometry/Point";
 import { Rectangle } from "../../../geometry/rectangle";
 
 export class Circle extends Control {
-    mouseDown(ev: MouseEvent): void {
-    }
-    mouseUp(ev: MouseEvent): void {
-    }
     public radius: number = 20;
 
     public render = (ctx: CanvasRenderingContext2D) => {

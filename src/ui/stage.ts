@@ -9,27 +9,19 @@ export class Stage {
 
     constructor(private canvas: ECanvas) {
         canvas.addDrawFunction(this.render);
-        document.addEventListener("mousedown", this.mousedown);
-        document.addEventListener("mouseup", this.mouseup);
+        document.addEventListener("mousedown", this.mouseDown);
+        document.addEventListener("mouseup", this.mouseUp);
         document.addEventListener("mousemove", this.mouseMove);
         document.addEventListener("click", this.click);
     }
 
-    public static create(): Stage {
-        var canvas = ECanvas.createFullScreen();
-        var stage = new Stage(canvas);
-        var animation = new EAnimation();
-        animation.addUpdateFunction(canvas.draw);
-        return stage;
-    }
-
-    private mousedown = (ev: MouseEvent) => {
+    private mouseDown = (ev: MouseEvent) => {
         if (this.view) {
             this.view.mouseDown(ev);
         }
     }
 
-    private mouseup = (ev: MouseEvent) => {
+    private mouseUp = (ev: MouseEvent) => {
         if (this.view) {
             this.view.mouseUp(ev);
         }

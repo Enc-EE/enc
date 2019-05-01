@@ -1,102 +1,52 @@
 import { LayoutView } from "./layoutView";
-import { Control } from "../controls/control";
-import { Point } from "../../geometry/Point";
 import { Rectangle } from "../../geometry/rectangle";
 import { HorizontalAlignementOption } from "../alignement/horizontalAlignementOption";
 import { VerticalAlignementOption } from "../alignement/verticalAlignementOption";
+import { RenderObject } from "../renderObject";
 
 export class ListView extends LayoutView {
     public spacing = 30;
 
-    private controls: Control[] = [];
-    private layoutViews: LayoutView[] = [];
-
-    public addControl = (control: Control) => {
-        control.alignement = this.alignement;
-        this.controls.push(control);
-        this.children.push(control);
-        this.triggerUpdateLayout();
-    }
-
-    public removeControl = (control: Control) => {
-        this.controls.removeItem(control);
-        this.children.removeItem(control);
-        this.triggerUpdateLayout();
-    }
-
-    public addLayoutView = (layoutView: LayoutView) => {
+    public addItem = (layoutView: RenderObject) => {
         layoutView.alignement = this.alignement;
-        this.layoutViews.push(layoutView);
         this.children.push(layoutView);
         this.triggerUpdateLayout();
     }
 
-    public removeLayoutView = (layoutView: LayoutView) => {
-        this.layoutViews.removeItem(layoutView);
+    public removeItem = (layoutView: RenderObject) => {
         this.children.removeItem(layoutView);
         this.triggerUpdateLayout();
     }
 
     public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle): void {
-        var x = 0;
-        switch (this.alignement.horizontalAlign) {
-            case HorizontalAlignementOption.Left:
-                x = bounds.x;
-                break;
-            case HorizontalAlignementOption.Center:
-                x = bounds.x - bounds.width / 2;
-                break;
-            case HorizontalAlignementOption.Right:
-                x = bounds.x - bounds.width;
-                break;
-        }
-        this.bounds.x = x;
+        super.updateLayout(ctx, bounds);
 
-        var y = 0;
-        switch (this.alignement.verticalAlign) {
-            case VerticalAlignementOption.Top:
-                y = bounds.y;
-                break;
-            case VerticalAlignementOption.Center:
-                y = bounds.y - bounds.height / 2;
-                break;
-            case VerticalAlignementOption.Bottom:
-                y = bounds.y - bounds.height;
-                break;
-        }
-        this.bounds.y = y;
+        console.log("updating listView layout");
+
+        var x = this.alignement.calculateDimensionsX(bounds, this.dimensions.width);
+        var y = this.alignement.calculateDimensionsY(bounds, this.dimensions.height);
 
         var width = 0;
         var height = 0;
 
-        for (const child of this.children) {
-            if (this.children.indexOf(child) > 0) {
+        for (let i = 0; i < this.children.length; i++) {
+            const child = this.children[i];
+            if (i > 0) {
                 y += this.spacing;
                 height += this.spacing;
             }
-            if (this.controls.contains(child as Control)) {
-                var control = child as Control;
-                control.align(ctx, new Point(x, y))
-                y += control.bounds.height;
-                height += control.bounds.height;
-                width = Math.max(width, control.bounds.width);
-            }
-            else if (this.layoutViews.contains(child as LayoutView)) {
-                var layoutView = child as LayoutView;
-                layoutView.updateLayout(ctx, new Rectangle(x, y, 0, 0));
-                y += layoutView.bounds.height;
-                height += control.bounds.height;
-                width = Math.max(width, layoutView.bounds.width);
-            }
-            else {
-                throw new Error("Error: 280420191625");
-            }
+            child.updateLayout(ctx, new Rectangle(x, y, 0, 0));
+            y += child.bounds.height;
+            height += child.dimensions.height;
+            width = Math.max(width, child.dimensions.width);
         }
 
-        if (height != this.bounds.height || width != this.bounds.width) {
-            this.bounds.height = height;
-            this.bounds.width = width;
-            this.updateLayout(ctx, new Rectangle(bounds.x, bounds.y, this.bounds.width, this.bounds.height));
+        if (this.dimensions.x != x || this.dimensions.y != y || this.dimensions.width != width || this.dimensions.height != height) {
+            this.dimensions.x = x;
+            this.dimensions.y = y;
+            this.dimensions.height = height;
+            this.dimensions.width = width;
+            this.updateLayout(ctx, new Rectangle(bounds.x, bounds.y, this.dimensions.width, this.dimensions.height));
         }
     }
 }

@@ -1,4 +1,5 @@
 import { Rectangle } from "../geometry/rectangle";
+import { Alignement } from "./alignement/alignement";
 
 export abstract class RenderObject {
     private static idCounter = 0;
@@ -17,7 +18,26 @@ export abstract class RenderObject {
     public tag: any;
 
     public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
-    public abstract render(ctx: CanvasRenderingContext2D): void;
+    public dimensions: Rectangle = new Rectangle(0, 0, 0, 0);
+
+    public alignement = new Alignement();
+
+    private shouldUpdateLayout = false;
+
+    public render(ctx: CanvasRenderingContext2D) {
+        if (this.shouldUpdateLayout) {
+            this.updateLayout(ctx, this.bounds);
+            this.shouldUpdateLayout = false;
+        }
+    };
+
+    public updateLayout(ctx: CanvasRenderingContext2D, bounds: Rectangle) {
+        this.bounds = bounds;
+    }
+
+    public triggerUpdateLayout = () => {
+        this.shouldUpdateLayout = true;
+    }
 
     abstract mouseDown(ev: MouseEvent): void;
     abstract mouseUp(ev: MouseEvent): void;

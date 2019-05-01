@@ -18,30 +18,32 @@ export class Slider extends Control {
         super();
     }
 
-    public align(ctx: CanvasRenderingContext2D, position: Point): void {
-        this.bounds = new Rectangle(position.x, position.y, 200, this.radius * 2);
-    }
-
     public render(ctx: CanvasRenderingContext2D): void {
-        var x = this.bounds.x;
-        var y = this.bounds.y;
+        var x = this.dimensions.x;
+        var y = this.dimensions.y;
         ctx.strokeStyle = "white";
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(x + this.radius, y + this.bounds.height / 2);
-        ctx.lineTo(x + this.bounds.width - this.radius, y + this.bounds.height / 2);
+        ctx.moveTo(x + this.radius, y + this.dimensions.height / 2);
+        ctx.lineTo(x + this.dimensions.width - this.radius, y + this.dimensions.height / 2);
         ctx.stroke();
 
         var relValue = (this.currentValue - this.minValue) / (this.maxValue - this.minValue);
         ctx.fillStyle = "blue";
         ctx.beginPath();
-        ctx.arc(x + this.radius + (this.bounds.width - this.radius * 2) * relValue, y + this.bounds.height / 2, this.radius, 0, Math.PI * 2);
+        ctx.arc(x + this.radius + (this.dimensions.width - this.radius * 2) * relValue, y + this.dimensions.height / 2, this.radius, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
     }
 
+    public updateLayout = (ctx: CanvasRenderingContext2D, bounds: Rectangle): void => {
+        super.updateLayout(ctx, bounds);
+
+        this.dimensions = new Rectangle(bounds.x, bounds.y, 200, this.radius * 2);
+    }
+
     public mouseDown = (ev: MouseEvent) => {
-        if (this.bounds.isHitBy(ev.clientX, ev.clientY)) {
+        if (this.dimensions.isHitBy(ev.clientX, ev.clientY)) {
             this.isDragging = true;
             this.updateCurrentValue(ev);
         }
@@ -58,8 +60,8 @@ export class Slider extends Control {
     }
 
     private updateCurrentValue(ev: MouseEvent) {
-        var val = ev.clientX - this.bounds.x - this.radius;
-        val = val / (this.bounds.width - this.radius * 2) * (this.maxValue - this.minValue) + this.minValue;
+        var val = ev.clientX - this.dimensions.x - this.radius;
+        val = val / (this.dimensions.width - this.radius * 2) * (this.maxValue - this.minValue) + this.minValue;
         if (val > this.maxValue) {
             val = this.maxValue;
         }
