@@ -1,14 +1,17 @@
 import { LayoutView } from "./layoutView";
 import { Rectangle } from "../../geometry/rectangle";
+import { RenderObject } from "../renderObject";
+import { ListViewProperties } from "./listViewProperties";
 import { HorizontalAlignementOption } from "../alignement/horizontalAlignementOption";
 import { VerticalAlignementOption } from "../alignement/verticalAlignementOption";
-import { RenderObject } from "../renderObject";
+import { Orientation } from "../alignement/orientation";
 
 export class ListView extends LayoutView {
-    public spacing = 30;
+    public properties = new ListViewProperties();
 
     public addItem = (layoutView: RenderObject) => {
-        layoutView.alignement = this.alignement;
+        layoutView.alignement.horizontalAlign = HorizontalAlignementOption.Left;
+        layoutView.alignement.verticalAlign = VerticalAlignementOption.Top;
         this.children.push(layoutView);
         this.triggerUpdateLayout();
     }
@@ -27,16 +30,30 @@ export class ListView extends LayoutView {
         var width = 0;
         var height = 0;
 
-        for (let i = 0; i < this.children.length; i++) {
-            const child = this.children[i];
-            if (i > 0) {
-                y += this.spacing;
-                height += this.spacing;
+        if (this.properties.orientation == Orientation.Vertical) {
+            for (let i = 0; i < this.children.length; i++) {
+                const child = this.children[i];
+                if (i > 0) {
+                    y += this.properties.itemSpacing;
+                    height += this.properties.itemSpacing;
+                }
+                child.updateLayout(ctx, new Rectangle(x, y, 0, 0));
+                y += child.dimensions.height;
+                height += child.dimensions.height;
+                width = Math.max(width, child.dimensions.width);
             }
-            child.updateLayout(ctx, new Rectangle(x, y, 0, 0));
-            y += child.dimensions.height;
-            height += child.dimensions.height;
-            width = Math.max(width, child.dimensions.width);
+        } else {
+            for (let i = 0; i < this.children.length; i++) {
+                const child = this.children[i];
+                if (i > 0) {
+                    x += this.properties.itemSpacing;
+                    width += this.properties.itemSpacing;
+                }
+                child.updateLayout(ctx, new Rectangle(x, y, 0, 0));
+                x += child.dimensions.width;
+                width += child.dimensions.width;
+                height = Math.max(height, child.dimensions.height);
+            }
         }
 
         if (this.dimensions.x != x || this.dimensions.y != y || this.dimensions.width != width || this.dimensions.height != height) {
@@ -44,7 +61,7 @@ export class ListView extends LayoutView {
             this.dimensions.y = y;
             this.dimensions.height = height;
             this.dimensions.width = width;
-            this.updateLayout(ctx, new Rectangle(bounds.x, bounds.y, this.dimensions.width, this.dimensions.height));
+            this.updateLayout(ctx, bounds);
         }
     }
 }
