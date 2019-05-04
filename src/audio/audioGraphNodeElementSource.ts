@@ -1,30 +1,60 @@
 import { AudioGraphNode } from "./audioGraphNode";
+import { EEvent } from "../eEvent";
 
-export class AudioGraphNodeElementSource extends AudioGraphNode<MediaElementAudioSourceNode> {
-    url: string;
-    source: MediaElementAudioSourceNode;
+export class AudioGraphNodeElementSource extends AudioGraphNode {
+    public url: string;
+    public audioEnded = new EEvent();
 
-    constructor(audioCtx: AudioContext, url: string) {
-        super(audioCtx);
+    private source: MediaElementAudioSourceNode;
+    private audio: HTMLAudioElement;
+
+    constructor(name: string, audioCtx: AudioContext, url: string) {
+        super(name, audioCtx);
         this.url = url;
-    }
 
-    public getAudioNode = (): MediaElementAudioSourceNode => {
-        if (!this.source) {
-            this.initialize();
-        }
-        return this.source;
-    }
-    audio: HTMLAudioElement;
-
-    private initialize() {
         this.audio = document.createElement('audio');
-        // document.body.appendChild(this.audio);
         this.audio.controls = true;
         this.audio.src = this.url;
-        this.source = this.audioCtx.createMediaElementSource(this.audio);
-        setTimeout(() => {
+        this.audio.addEventListener("ended", this.audioEndedEvent);
+    }
+
+    private audioEndedEvent = () => {
+        this.audioEnded.dispatchEvent();
+    }
+
+    public getAudioNode = (): AudioNode => {
+        return this.source;
+    }
+
+    public reload(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!this.source) {
+                this.source = this.audioCtx.createMediaElementSource(this.audio);
+            }
+            resolve();
+        });
+    }
+
+    public play = () => {
+        this.audio.play();
+    }
+
+    public pause = () => {
+        this.audio.pause();
+    }
+
+    public stop = () => {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+    }
+
+    public setUrl = (url: string) => {
+        var play = !this.audio.paused;
+        this.url = url;
+        this.audio.src = url;
+        this.audio.load();
+        if (play) {
             this.audio.play();
-        }, 5000);
+        }
     }
 }

@@ -1,7 +1,11 @@
 import { AudioGraphNode } from "./audioGraphNode";
 
-export class AudioGraphNodeDestination extends AudioGraphNode<AudioDestinationNode> {
-    public getAudioNode = (): AudioDestinationNode => {
+export class AudioGraphNodeDestination extends AudioGraphNode {
+    public getAudioNode = (): AudioNode => {
         return this.audioCtx.destination;
+    }
+
+    public reload(): Promise<void> {
+        return;
     }
 }

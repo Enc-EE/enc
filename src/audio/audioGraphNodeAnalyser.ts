@@ -1,23 +1,25 @@
 import { AudioGraphNode } from "./audioGraphNode";
 
-export class AudioGraphNodeAnalyser extends AudioGraphNode<AnalyserNode> {
+export class AudioGraphNodeAnalyser extends AudioGraphNode {
     analyserNode: AnalyserNode;
     bufferLength: number;
     dataArray: Uint8Array;
 
-    public getAudioNode = (): AnalyserNode => {
-        if (!this.analyserNode) {
-            this.initialize();
-        }
+    public getAudioNode = (): AudioNode => {
         return this.analyserNode;
     }
 
-    private initialize() {
-        this.analyserNode = this.audioCtx.createAnalyser();
-        this.analyserNode.fftSize = 32;
-        this.analyserNode.smoothingTimeConstant = 0.9;
-        this.bufferLength = this.analyserNode.frequencyBinCount;
-        this.dataArray = new Uint8Array(this.bufferLength);
+    public reload(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (!this.analyserNode) {
+                this.analyserNode = this.audioCtx.createAnalyser();
+            }
+            this.analyserNode.fftSize = 32;
+            this.analyserNode.smoothingTimeConstant = 0.9;
+            this.bufferLength = this.analyserNode.frequencyBinCount;
+            this.dataArray = new Uint8Array(this.bufferLength);
+            resolve();
+        });
     }
 
     public getSpectrum() {

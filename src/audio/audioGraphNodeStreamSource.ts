@@ -1,24 +1,23 @@
 import { AudioGraphNode } from "./audioGraphNode";
 
-export class AudioGraphNodeStreamSource extends AudioGraphNode<MediaStreamAudioSourceNode> {
+export class AudioGraphNodeStreamSource extends AudioGraphNode {
     source: MediaStreamAudioSourceNode;
 
-    public getAudioNode = (): MediaStreamAudioSourceNode => {
-        // async!!!
-        if (!this.source) {
-            this.initialize();
-        }
+    public getAudioNode = (): AudioNode => {
         return this.source;
     }
 
-    private initialize() {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: false })
-            .then((stream) => {
-                this.source = this.audioCtx.createMediaStreamSource(stream)
-            })
-            .catch(function (err) {
-                alert("error1923012258")
-                /* handle the error */
-            });
+    public reload(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+                .then((stream) => {
+                    this.source = this.audioCtx.createMediaStreamSource(stream);
+                    resolve();
+                })
+                .catch(function (err) {
+                    alert("error1923012258")
+                    reject();
+                });
+        });
     }
 }

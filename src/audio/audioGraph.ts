@@ -3,38 +3,60 @@ import { AudioGraphNodeAnalyser } from "./audioGraphNodeAnalyser";
 import { AudioGraphNodeDestination } from "./audioGraphNodeDestination";
 import { AudioGraphNodeElementSource } from "./audioGraphNodeElementSource";
 import { AudioGraphNodeStreamSource } from "./audioGraphNodeStreamSource";
+import { EEventT } from "../eEvent";
 
 export class AudioGraph {
-    private audioCtx: AudioContext;
+    public audioCtx: AudioContext;
 
-    private sourceNode: AudioGraphNode<AudioNode>;
-    private analyzerNode: AudioGraphNodeAnalyser;
-    private destinationNode: AudioGraphNode<AudioDestinationNode>;
+    // private sourceNode: AudioGraphNode<AudioNode>;
+    // private analyzerNode: AudioGraphNodeAnalyser;
+
+    // remove generic T?
+    private audioNodes: AudioGraphNode[] = [];
+
+    public destinationNode: AudioGraphNode;
 
     constructor() {
         this.audioCtx = new AudioContext();
-        this.audioCtx.addEventListener("statechange", this.audioContextStateChanged);
+        this.audioCtx.addEventListener("statechange", this.audioContextStateChangedEvaluator);
         if (this.audioCtx.state === "suspended") {
             document.addEventListener("click", this.documentClick);
             console.log("Audio context is suspended. Click the dom to make it running.");
         }
-        this.analyzerNode = new AudioGraphNodeAnalyser(this.audioCtx);
-        this.destinationNode = new AudioGraphNodeDestination(this.audioCtx);
+        this.destinationNode = new AudioGraphNodeDestination("destination", this.audioCtx);
     }
 
-    public playUrl = (url: string) => {
-        this.sourceNode = new AudioGraphNodeElementSource(this.audioCtx, url);
-        if (this.audioCtx.state === "running") {
-            this.buildGraph();
-        }
+    public addMediaElementSource = (name: string, url: string) => {
+        var sourceNode = new AudioGraphNodeElementSource(name, this.audioCtx, url);
+        this.audioNodes.push(sourceNode);
+        return sourceNode;
     }
 
-    public playStream = () => {
-        this.sourceNode = new AudioGraphNodeStreamSource(this.audioCtx);
-        if (this.audioCtx.state === "running") {
-            this.buildGraph();
-        }
+    public addAnalyzer = (name: string) => {
+        var analyzerNode = new AudioGraphNodeAnalyser(name, this.audioCtx);
+        this.audioNodes.push(analyzerNode);
+        return analyzerNode;
     }
+
+    public getAudioGraphNode = (name: string) => {
+        return this.audioNodes.first(x => x.name == name);
+    }
+
+    // public playUrl = (url: string) => {
+    //     this.sourceNode = new AudioGraphNodeElementSource(this.audioCtx, url);
+    //     if (this.audioCtx.state === "running") {
+    //         this.buildGraph();
+    //     }
+    // }
+
+    // public playStream = () => {
+    //     this.sourceNode = new AudioGraphNodeStreamSource(this.audioCtx);
+    //     if (this.audioCtx.state === "running") {
+    //         this.buildGraph();
+    //     }
+    // }
+
+    public audioContextStateChanged = new EEventT<string>();
 
     private documentClick = () => {
         if (this.audioCtx.state === "suspended") {
@@ -43,35 +65,61 @@ export class AudioGraph {
         }
     }
 
-    private audioContextStateChanged = () => {
+    private audioContextStateChangedEvaluator = () => {
         if (this.audioCtx.state === "running") {
-            this.audioCtx.removeEventListener("statechange", this.audioContextStateChanged);
-            this.buildGraph();
+            console.log("audio context state changed");
+            
+            this.audioCtx.removeEventListener("statechange", this.audioContextStateChangedEvaluator);
+            this.reload()
+                .then(() => {
+                    this.audioContextStateChanged.dispatchEvent(this.audioCtx.state);
+                });
         }
     }
 
-    private buildGraph() {
-        console.log("Building audio graph.");
+    public reload = () => {
+        return new Promise((resolve, reject) => {
+            console.log("realoading audio graph");
+            Promise.all(this.audioNodes.map(x => x.reload()))
+                .then(() => {
+                    console.log("reloaded audio graph");
+                    for (let i = 0; i < this.audioNodes.length; i++) {
+                        const audioNode = this.audioNodes[i];
+                        audioNode.getAudioNode().disconnect();
 
-        if (this.sourceNode.getAudioNode()) {
-            this.sourceNode.getAudioNode().disconnect();
-            this.analyzerNode.getAudioNode().disconnect();
-            this.destinationNode.getAudioNode().disconnect();
-            this.sourceNode.getAudioNode().connect(this.analyzerNode.getAudioNode());
-            this.analyzerNode.getAudioNode().connect(this.destinationNode.getAudioNode());
-        } else {
-            console.log("Audio source not available. Waiting some time.");
-            setTimeout(() => {
-                this.buildGraph();
-            }, 1000);
-        }
+                        if (i < this.audioNodes.length - 1) {
+                            audioNode.getAudioNode().connect(this.audioNodes[i + 1].getAudioNode());
+                        } else {
+                            audioNode.getAudioNode().connect(this.destinationNode.getAudioNode());
+                        }
+                    }
+                    resolve();
+                });
+        });
     }
 
-    public getSpectrum() {
-        return this.analyzerNode.getSpectrum();
-    }
+    // private buildGraph() {
+    //     console.log("Building audio graph.");
 
-    public getWave() {
-        return this.analyzerNode.getWave();
-    }
+    //     if (this.sourceNode.getAudioNode()) {
+    //         this.sourceNode.getAudioNode().disconnect();
+    //         this.analyzerNode.getAudioNode().disconnect();
+    //         this.destinationNode.getAudioNode().disconnect();
+    //         this.sourceNode.getAudioNode().connect(this.analyzerNode.getAudioNode());
+    //         this.analyzerNode.getAudioNode().connect(this.destinationNode.getAudioNode());
+    //     } else {
+    //         console.log("Audio source not available. Waiting some time.");
+    //         setTimeout(() => {
+    //             this.buildGraph();
+    //         }, 1000);
+    //     }
+    // }
+
+    // public getSpectrum() {
+    //     return this.analyzerNode.getSpectrum();
+    // }
+
+    // public getWave() {
+    //     return this.analyzerNode.getWave();
+    // }
 }

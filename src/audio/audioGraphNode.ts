@@ -1,5 +1,6 @@
-export abstract class AudioGraphNode<T> {
-    constructor(protected audioCtx: AudioContext) { }
+export abstract class AudioGraphNode {
+    constructor(public name: string, protected audioCtx: AudioContext) { }
 
-    public abstract getAudioNode(): T;
+    public abstract getAudioNode(): AudioNode;
+    public abstract reload(): Promise<void>;
 }
