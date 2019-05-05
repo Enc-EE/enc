@@ -10,11 +10,21 @@ export class ECanvas {
     private drawFunctions: DrawFunction[] = [];
 
     public get width(): number {
-        return this.canvas.width;
+        return this.canvas.clientWidth;
     }
 
     public get height(): number {
-        return this.canvas.height;
+        return this.canvas.clientHeight;
+    }
+
+    private dprScalingEnabled = true;
+    public enableDprScaling = () => {
+        this.dprScalingEnabled = true;
+        this.resize();
+    }
+    public disableDprScaling = () => {
+        this.dprScalingEnabled = false;
+        this.resize();
     }
 
     public resized = new EEvent()
@@ -53,8 +63,15 @@ export class ECanvas {
     }
 
     public resize = () => {
-        this.canvas.width = this.canvas.clientWidth;
-        this.canvas.height = this.canvas.clientHeight;
+        var dpr = this.dprScalingEnabled ? window.devicePixelRatio || 1 : 1;
+        
+        this.canvas.width = this.canvas.clientWidth * dpr;
+        this.canvas.height = this.canvas.clientHeight * dpr;
+
+        if (dpr != 1) {
+            this.ctx.scale(dpr, dpr);
+        }
+
         this.resized.dispatchEvent();
     }
 
