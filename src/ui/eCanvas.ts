@@ -8,13 +8,14 @@ export class ECanvas {
     private ctx: CanvasRenderingContext2D;
 
     private drawFunctions: DrawFunction[] = [];
+    private dpr = 1;
 
     public get width(): number {
-        return this.canvas.clientWidth;
+        return this.canvas.clientWidth / this.dpr;
     }
 
     public get height(): number {
-        return this.canvas.clientHeight;
+        return this.canvas.clientHeight / this.dpr;
     }
 
     private dprScalingEnabled = true;
@@ -63,22 +64,21 @@ export class ECanvas {
     }
 
     public resize = () => {
-        var dpr = this.dprScalingEnabled ? window.devicePixelRatio || 1 : 1;
-        
-        this.canvas.width = this.canvas.clientWidth * dpr;
-        this.canvas.height = this.canvas.clientHeight * dpr;
+        this.dpr = this.dprScalingEnabled ? window.devicePixelRatio || 1 : 1;
 
-        if (dpr != 1) {
-            this.ctx.scale(dpr, dpr);
-        }
+        this.canvas.width = this.canvas.clientWidth;
+        this.canvas.height = this.canvas.clientHeight;
 
         this.resized.dispatchEvent();
     }
 
     public draw = () => {
+        this.ctx.save();
+        this.ctx.scale(this.dpr, this.dpr);
         for (const drawFunction of this.drawFunctions) {
             drawFunction(this.ctx, this.width, this.height);
         }
+        this.ctx.restore();
     }
 
     public addDrawFunction = (func: DrawFunction) => {
