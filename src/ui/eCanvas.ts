@@ -8,7 +8,7 @@ export class ECanvas {
     private ctx: CanvasRenderingContext2D;
 
     private drawFunctions: DrawFunction[] = [];
-    private dpr = 1;
+    public dpr = 1;
 
     public get width(): number {
         return this.canvas.clientWidth / this.dpr;

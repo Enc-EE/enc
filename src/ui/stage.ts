@@ -22,25 +22,49 @@ export class Stage {
 
     private mouseDown = (ev: MouseEvent) => {
         if (this.view) {
-            this.view.mouseDown(ev);
+            this.view.mouseDown({
+                clientX: ev.clientX / this.canvas.dpr,
+                clientY: ev.clientY / this.canvas.dpr,
+                altKey: ev.altKey,
+                ctrlKey: ev.ctrlKey,
+                shiftKey: ev.shiftKey
+            } as MouseEvent);
         }
     }
 
     private mouseUp = (ev: MouseEvent) => {
         if (this.view) {
-            this.view.mouseUp(ev);
+            this.view.mouseUp({
+                clientX: ev.clientX / this.canvas.dpr,
+                clientY: ev.clientY / this.canvas.dpr,
+                altKey: ev.altKey,
+                ctrlKey: ev.ctrlKey,
+                shiftKey: ev.shiftKey
+            } as MouseEvent);
         }
     }
 
     private mouseMove = (ev: MouseEvent) => {
         if (this.view) {
-            this.view.mouseMove(ev);
+            this.view.mouseMove({
+                clientX: ev.clientX / this.canvas.dpr,
+                clientY: ev.clientY / this.canvas.dpr,
+                altKey: ev.altKey,
+                ctrlKey: ev.ctrlKey,
+                shiftKey: ev.shiftKey
+            } as MouseEvent);
         }
     }
 
     private click = (ev: MouseEvent) => {
         if (this.view) {
-            this.view.click(ev);
+            this.view.click({
+                clientX: ev.clientX / this.canvas.dpr,
+                clientY: ev.clientY / this.canvas.dpr,
+                altKey: ev.altKey,
+                ctrlKey: ev.ctrlKey,
+                shiftKey: ev.shiftKey
+            } as MouseEvent);
         }
     }
 
