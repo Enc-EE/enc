@@ -60,6 +60,7 @@ export class CanvasHelper {
                     retries--;
                     if (retries == 0) {
                         console.log("stop loading font after " + retries + " retries with " + retryDelayMs + "ms delay");
+                        resolve();
                     } else {
                         // console.log("waiting a while (" + retryDelayMs + "ms)");
                         setTimeout(() => {
