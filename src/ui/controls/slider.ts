@@ -1,5 +1,4 @@
 import { Control } from "./control";
-import { Point } from "../../geometry/point";
 import { Rectangle } from "../../geometry/rectangle";
 import { EEventT } from "../../eEvent";
 
@@ -10,7 +9,6 @@ export class Slider extends Control {
     public maxValue = 100;
     public currentValue = 50;
     isDragging: boolean;
-    oldPosition: { x: number; y: number; };
 
     public valueChanged = new EEventT<number>();
 
