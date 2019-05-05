@@ -39,6 +39,10 @@ export abstract class RenderObject {
         this.shouldUpdateLayout = true;
     }
 
+    public disableMouseMove = () => {
+        this.mouseMove = () => { }
+    }
+
     abstract mouseDown(ev: MouseEvent): void;
     abstract mouseUp(ev: MouseEvent): void;
     abstract mouseMove(ev: MouseEvent): void;

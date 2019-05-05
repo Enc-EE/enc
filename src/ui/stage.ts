@@ -9,10 +9,15 @@ export class Stage {
 
     constructor(private canvas: ECanvas) {
         canvas.addDrawFunction(this.render);
+        canvas.resized.addEventListener(this.canvasResized);
         document.addEventListener("mousedown", this.mouseDown);
         document.addEventListener("mouseup", this.mouseUp);
         document.addEventListener("mousemove", this.mouseMove);
         document.addEventListener("click", this.click);
+    }
+
+    private canvasResized = () => {
+        this.shouldUpdateLayout = true;
     }
 
     private mouseDown = (ev: MouseEvent) => {

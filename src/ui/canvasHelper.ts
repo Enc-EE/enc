@@ -27,7 +27,7 @@ export class CanvasHelper {
         ctx.fillText(icon, 0, 0);
         var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         var icon1PixelCount = this.countPixels(imageData);
-        console.log("icon 1 pixel count: " + icon1PixelCount);
+        // console.log("icon 1 pixel count: " + icon1PixelCount);
         return icon1PixelCount;
     }
 
@@ -54,14 +54,14 @@ export class CanvasHelper {
                 var diffPixels = Math.abs(icon2PixelCount - icon1PixelCount);
 
                 if (diffPixels > 5) {
-                    console.log("font loaded");
+                    console.log("loaded font \"" + font + "\"");
                     resolve();
                 } else {
                     retries--;
                     if (retries == 0) {
                         console.log("stop loading font after " + retries + " retries with " + retryDelayMs + "ms delay");
                     } else {
-                        console.log("waiting a while (" + retryDelayMs + "ms)");
+                        // console.log("waiting a while (" + retryDelayMs + "ms)");
                         setTimeout(() => {
                             checkLoaded();
                         }, retryDelayMs);

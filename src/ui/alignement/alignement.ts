@@ -8,7 +8,7 @@ export class Alignement {
     public verticalAlign = VerticalAlignementOption.Center;
 
     public margin = new Spacing();
-    public padding = new Spacing();
+    // public padding = new Spacing();
 
     public calculateDimensionsX = (bounds: Rectangle, width: number) => {
         switch (this.horizontalAlign) {

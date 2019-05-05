@@ -19,7 +19,6 @@ export class EAnimation {
 
     public play() {
         if (!this.isRunning) {
-            console.log("play");
             this.isRunning = true;
             this.lastFrameTime = Date.now();
             this.animationLoop();
@@ -28,7 +27,6 @@ export class EAnimation {
 
     public pause() {
         if (this.isRunning) {
-            console.log("pause");
             this.isRunning = false;
         }
     }

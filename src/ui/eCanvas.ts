@@ -1,4 +1,5 @@
 import { EAnimation } from "../eAnimation";
+import { EEvent } from "../eEvent";
 
 export type DrawFunction = (ctx: CanvasRenderingContext2D, width?: number, height?: number) => void;
 
@@ -15,6 +16,8 @@ export class ECanvas {
     public get height(): number {
         return this.canvas.height;
     }
+
+    public resized = new EEvent()
 
     private constructor() { }
 
@@ -50,9 +53,9 @@ export class ECanvas {
     }
 
     public resize = () => {
-        console.log("canvas.resize()");
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
+        this.resized.dispatchEvent();
     }
 
     public draw = () => {
