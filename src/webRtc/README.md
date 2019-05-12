@@ -111,7 +111,7 @@ PUT api/v1/client1icecandidate/myId1/myId2
 9. Client1: Get ICE Candidate
 Request
 ```
-GET api/v1/client2icecandidate/myId1/myId2
+GET api/v1/client2icecandidates/myId1/myId2
 ```
 
 Response
@@ -131,7 +131,7 @@ PUT api/v1/client2icecandidate/myId1/myId2
 11. Client2: Get ICE Candidate
 Request
 ```
-GET api/v1/client1icecandidate/myId1/myId2
+GET api/v1/client1icecandidates/myId1/myId2
 ```
 
 Response
