@@ -23,7 +23,9 @@ export class PanAndZoomView extends LayoutView {
         document.addEventListener('wheel', this.pazMouseScroll)
     }
 
-    public render(ctx: CanvasRenderingContext2D) {
+    private superRender2 = this.render;
+    public render = (ctx: CanvasRenderingContext2D) => {
+        this.superRender2(ctx);
         ctx.save();
         ctx.transform(this.zoom, 0, 0, this.zoom, this.offsetX + this.bounds.x, this.offsetY + this.bounds.y);
         super.render(ctx);

@@ -16,7 +16,7 @@ export class Slider extends Control {
         super();
     }
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    public render = (ctx: CanvasRenderingContext2D): void => {
         var x = this.dimensions.x;
         var y = this.dimensions.y;
         ctx.strokeStyle = "white";

@@ -12,7 +12,7 @@ export class CRectangle extends Control {
     public fillStyle = "black";
     public withBorder = false;
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    public render = (ctx: CanvasRenderingContext2D): void => {
         ctx.save();
         ctx.strokeStyle = "blue";
         ctx.lineWidth = 2;

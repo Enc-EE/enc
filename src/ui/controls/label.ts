@@ -1,23 +1,37 @@
 import { Control } from "./control";
-import { Point } from "../../geometry/Point";
 import { Rectangle } from "../../geometry/rectangle";
+import { LabelProperties } from "./labelProperties";
 
 export class Label extends Control {
-    public fontSize: number = 30;
+    public properties = new LabelProperties();
+
     public text: string;
 
-    public render = (ctx: CanvasRenderingContext2D) => {
-        ctx.font = this.fontSize + "px Arial";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.fillText(this.text, this.bounds.x, this.bounds.y);
+    constructor() {
+        super();
+        this.disableMouseEvents();
     }
 
-    public align = (ctx: CanvasRenderingContext2D, position: Point) => {
-        ctx.font = this.fontSize + "px Arial";
+    public render = (ctx: CanvasRenderingContext2D) => {
+        ctx.fillStyle = this.properties.fillStyle;
+        ctx.font = this.properties.getFont();
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(this.text, this.dimensions.x, this.dimensions.y);
+    }
+
+    public updateLayout = (ctx: CanvasRenderingContext2D, bounds: Rectangle): void => {
+        super.updateLayout(ctx, bounds);
+
+        ctx.font = this.properties.getFont();
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
         var size = ctx.measureText(this.text);
-        this.bounds = new Rectangle(position.x - size.width / 2, position.y - this.fontSize / 2, size.width, this.fontSize);
+
+        var x = this.alignement.calculateDimensionsX(bounds, size.width);
+        var y = this.alignement.calculateDimensionsY(bounds, this.properties.fontSize);
+
+        this.dimensions = new Rectangle(x, y, size.width, this.properties.fontSize)
+        console.log(this.dimensions);
     }
 }

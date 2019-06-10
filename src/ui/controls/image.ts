@@ -22,8 +22,9 @@ export class EImage extends Control {
         });
     }
 
+    private superRender = this.render;
     public render = (ctx: CanvasRenderingContext2D) => {
-        super.render(ctx);
+        this.superRender(ctx);
 
         ctx.drawImage(this.image, this.dimensions.x, this.dimensions.y, this.dimensions.width, this.dimensions.height);
         if (this.isMouseOver && this.isEnabled) {

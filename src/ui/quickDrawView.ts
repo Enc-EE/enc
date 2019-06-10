@@ -15,7 +15,7 @@ export class QuickDrawView extends RenderObject {
 
     public renderMethod: (ctx: CanvasRenderingContext2D, bounds: Rectangle) => void;
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    public render = (ctx: CanvasRenderingContext2D): void => {
         this.renderMethod(ctx, this.bounds);
     }
 

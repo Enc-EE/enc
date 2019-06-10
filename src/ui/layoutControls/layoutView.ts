@@ -3,8 +3,9 @@ import { RenderObject } from "../renderObject";
 export abstract class LayoutView extends RenderObject {
     protected children: RenderObject[] = [];
 
-    public render(ctx: CanvasRenderingContext2D) {
-        super.render(ctx);
+    private superRender = this.render;
+    public render = (ctx: CanvasRenderingContext2D) => {
+        this.superRender(ctx);
         for (const child of this.children) {
             child.render(ctx);
         }
