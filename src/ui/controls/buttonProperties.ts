@@ -1,8 +1,8 @@
 export class ButtonProperties {
     public fontSize = 40;
     public fontPrefix = "";
-    public fontFamily = "fontawesome";
-    public fillStyle = "blue";
+    public fontFamily = "Georgia"
+    public fillStyle = "grey";
     public mouseOverFillStyle = "red";
     public backgroundFillStyle: string = undefined;
 

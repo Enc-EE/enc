@@ -17,13 +17,17 @@ export class AudioGraph {
     public destinationNode: AudioGraphNode;
 
     constructor() {
-        this.audioCtx = new AudioContext();
-        this.audioCtx.addEventListener("statechange", this.audioContextStateChangedEvaluator);
-        if (this.audioCtx.state === "suspended") {
-            document.addEventListener("click", this.documentClick);
-            console.log("Audio context is suspended. Click the dom to make it running.");
+        try {
+            this.audioCtx = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
+            this.audioCtx.addEventListener("statechange", this.audioContextStateChangedEvaluator);
+            if (this.audioCtx.state === "suspended") {
+                document.addEventListener("click", this.documentClick);
+                console.log("Audio context is suspended. Click the dom to make it running.");
+            }
+            this.destinationNode = new AudioGraphNodeDestination("destination", this.audioCtx);
+        } catch (error) {
+            throw "It looks like your browser does not support web audio API :(";
         }
-        this.destinationNode = new AudioGraphNodeDestination("destination", this.audioCtx);
     }
 
     public addMediaElementSource = (name: string, url: string) => {
@@ -68,7 +72,7 @@ export class AudioGraph {
     private audioContextStateChangedEvaluator = () => {
         if (this.audioCtx.state === "running") {
             console.log("audio context state changed");
-            
+
             this.audioCtx.removeEventListener("statechange", this.audioContextStateChangedEvaluator);
             this.reload()
                 .then(() => {

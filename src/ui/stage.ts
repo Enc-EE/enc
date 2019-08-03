@@ -6,22 +6,48 @@ import { EAnimation } from "../eAnimation";
 export class Stage {
     private view: LayoutView;
     private shouldUpdateLayout: boolean;
+    private isTouchMode = false;
 
     constructor(private canvas: ECanvas) {
         canvas.addDrawFunction(this.render);
         canvas.resized.addEventListener(this.canvasResized);
+        document.addEventListener("click", this.click);
+        document.addEventListener("touchstart", this.touchMode);
         document.addEventListener("mousedown", this.mouseDown);
         document.addEventListener("mouseup", this.mouseUp);
         document.addEventListener("mousemove", this.mouseMove);
-        document.addEventListener("click", this.click);
     }
 
     private canvasResized = () => {
         this.shouldUpdateLayout = true;
     }
 
+    private touchMode = (ev: TouchEvent) => {
+        if (!this.isTouchMode) {
+            this.isTouchMode = true;
+            document.removeEventListener("mouseup", this.mouseUp);
+            document.removeEventListener("mousemove", this.mouseMove);
+            document.removeEventListener("mousedown", this.mouseDown);
+            document.addEventListener("mousedown", this.mouseMode);
+            document.removeEventListener("touchstart", this.touchMode);
+        }
+    }
+    
+    private mouseMode = (ev: TouchEvent) => {
+        if (this.isTouchMode) {
+            this.isTouchMode = false;
+            document.addEventListener("mouseup", this.mouseUp);
+            document.addEventListener("mousemove", this.mouseMove);
+            document.addEventListener("mousedown", this.mouseDown);
+            document.addEventListener("touchstart", this.touchMode);
+            document.removeEventListener("mousedown", this.mouseMode);
+        }
+    }
+
     private mouseDown = (ev: MouseEvent) => {
         if (this.view) {
+            // console.log("hi");
+
             this.view.mouseDown({
                 clientX: ev.clientX / this.canvas.dpr,
                 clientY: ev.clientY / this.canvas.dpr,

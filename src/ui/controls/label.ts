@@ -32,6 +32,5 @@ export class Label extends Control {
         var y = this.alignement.calculateDimensionsY(bounds, this.properties.fontSize);
 
         this.dimensions = new Rectangle(x, y, size.width, this.properties.fontSize)
-        console.log(this.dimensions);
     }
 }

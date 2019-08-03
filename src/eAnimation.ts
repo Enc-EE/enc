@@ -1,3 +1,5 @@
+import { EEvent } from "./eEvent";
+
 export type UpdateFunction = (timeDiff: number) => void;
 
 export class EAnimation {
@@ -6,6 +8,9 @@ export class EAnimation {
     private lastFrameTime: number;
     private fps: number;
     private fpsInterval: number;
+    private performanceWarningThreshold = 1.2;
+    private performanceWarningDelayRuns = 8;
+    private currentPerformanceWarningDelayRun = 0;
 
     public constructor() {
         this.setFps(30);
@@ -16,6 +21,8 @@ export class EAnimation {
             }
         });
     }
+
+    public lowPerformance: EEvent = new EEvent();
 
     public play() {
         if (!this.isRunning) {
@@ -59,6 +66,17 @@ export class EAnimation {
         if (elapsed > this.fpsInterval) {
             this.lastFrameTime = now;
             var timeDiff = elapsed / 1000;
+
+            if ((elapsed / this.fpsInterval) - 1 > this.performanceWarningThreshold) {
+                console.log("Warning: low performance");
+                this.currentPerformanceWarningDelayRun++;
+                if (this.currentPerformanceWarningDelayRun > this.performanceWarningDelayRuns) {
+                    this.lowPerformance.dispatchEvent();
+                    this.currentPerformanceWarningDelayRun = 0;
+                }
+            } else if (this.currentPerformanceWarningDelayRun > 0) {
+                this.currentPerformanceWarningDelayRun = 0;
+            }
 
             for (const updateFunction of this.updateFunctions) {
                 updateFunction(timeDiff);

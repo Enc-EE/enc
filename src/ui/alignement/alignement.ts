@@ -5,10 +5,29 @@ import { Spacing } from "./spacing";
 
 export class Alignement {
     public horizontalAlign = HorizontalAlignementOption.Center;
-    public verticalAlign = VerticalAlignementOption.Center;
+
+    public set verticalAlign(v: VerticalAlignementOption) {
+        switch (v) {
+            case VerticalAlignementOption.Bottom:
+                this.verticalAlignmentRatio = 1;
+                break;
+            case VerticalAlignementOption.Center:
+                this.verticalAlignmentRatio = 0.5;
+                break;
+            case VerticalAlignementOption.Top:
+                this.verticalAlignmentRatio = 0;
+                break;
+        }
+    }
+
+    public verticalAlignmentRatio = VerticalAlignementOption.Center;
 
     public margin = new Spacing();
     // public padding = new Spacing();
+
+    constructor() {
+        this.verticalAlign = VerticalAlignementOption.Center;
+    }
 
     public calculateDimensionsX = (bounds: Rectangle, width: number) => {
         switch (this.horizontalAlign) {
@@ -22,13 +41,9 @@ export class Alignement {
     }
 
     public calculateDimensionsY = (bounds: Rectangle, height: number) => {
-        switch (this.verticalAlign) {
-            case VerticalAlignementOption.Top:
-                return bounds.y + this.margin.top;
-            case VerticalAlignementOption.Center:
-                return bounds.y + bounds.height / 2 - height / 2;
-            case VerticalAlignementOption.Bottom:
-                return bounds.y + bounds.height - height - this.margin.bottom;
-        }
+        return bounds.y
+            + bounds.height * this.verticalAlignmentRatio
+            - height * this.verticalAlignmentRatio
+            + (this.verticalAlignmentRatio > 0.5 ? -this.margin.bottom : this.margin.top);
     }
 }

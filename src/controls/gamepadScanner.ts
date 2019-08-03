@@ -1,7 +1,7 @@
 import { EEventT } from "../eEvent";
 
 export class GamepadScanner {
-    private gamepadScanner: number;
+    private gamepadScanner: NodeJS.Timeout;
     private gamepads: Gamepad[] = [];
 
     constructor() {

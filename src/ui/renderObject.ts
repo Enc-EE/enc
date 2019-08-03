@@ -1,6 +1,7 @@
 import { Rectangle } from "../geometry/rectangle";
 import { Alignement } from "./alignement/alignement";
 import { MethodManipulation } from "../methodManipulation";
+import { UImation } from "./uimation/uimation";
 
 export abstract class RenderObject {
     private static idCounter = 0;
@@ -11,14 +12,9 @@ export abstract class RenderObject {
     startTime: number;
     duration: number;
 
-    constructor(initializeAsActive = true) {
+    constructor() {
         this.id = this.generateNewId();
         this.name = "object " + this.id;
-
-        this.isActive = initializeAsActive;
-        if (!this.isActive) {
-            this.deactivate();
-        }
     }
 
     public id: number;
@@ -56,33 +52,46 @@ export abstract class RenderObject {
         this.shouldUpdateLayout = true;
     }
 
-    private isActive = false;
-    public activate = () => {
-        this.startTime = Date.now();
-        this.duration = 3;
+    private isActive = true;
+    public activate = (durationSeconds: number) => {
+        this.renderMethodManipulation.reset();
+        var uimation = new UImation(durationSeconds);
 
         this.renderMethodManipulation.add((currentMethod) => {
             return (ctx: CanvasRenderingContext2D) => {
-                var current = Date.now();
-                var diff = current - this.startTime;
-                if (diff <= 5000) {
-                    ctx.save();
-                    ctx.globalAlpha = diff / 1000 / this.duration
-                    // currentMethod = currentMethod.bind(this);
-                    currentMethod(ctx);
-                    ctx.restore();
-                } else {
-                    // currentMethod = currentMethod.bind(this);
+                if (uimation.ended()) {
                     currentMethod(ctx);
                     this.renderMethodManipulation.remove();
+                } else {
+                    ctx.save();
+                    ctx.globalAlpha = uimation.getValue();
+                    currentMethod(ctx);
+                    ctx.restore();
+
                 }
             }
         });
     }
+    public deactivated = () => {
+        this.renderMethodManipulation.clear();
+    }
 
-    public deactivate = () => {
-        // this.renderMethodCache = this.render;
-        // this.render = (ctx: CanvasRenderingContext2D) => { };
+    public deactivate = (durationSeconds: number) => {
+        var uimation = new UImation(durationSeconds);
+
+        this.renderMethodManipulation.add((currentMethod) => {
+            return (ctx: CanvasRenderingContext2D) => {
+                if (uimation.ended()) {
+                    this.renderMethodManipulation.remove();
+                    this.renderMethodManipulation.clear();
+                } else {
+                    ctx.save();
+                    ctx.globalAlpha = 1 - uimation.getValue();
+                    currentMethod(ctx);
+                    ctx.restore();
+                }
+            }
+        });
     }
 
     public disableMouseEvents = () => {

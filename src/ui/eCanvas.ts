@@ -18,7 +18,7 @@ export class ECanvas {
         return this.canvas.clientHeight / this.dpr;
     }
 
-    private dprScalingEnabled = true;
+    private dprScalingEnabled = false;
     public enableDprScaling = () => {
         this.dprScalingEnabled = true;
         this.resize();

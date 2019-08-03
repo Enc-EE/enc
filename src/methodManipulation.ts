@@ -17,4 +17,12 @@ export class MethodManipulation<T extends (...args: any[]) => any> {
         this.methods.pop();
         this.setMethod(this.methods[this.methods.length - 1]);
     }
+
+    public reset = () => {
+        this.setMethod(this.methods[this.methods.length - 1]);
+    }
+
+    public clear = () => {
+        this.setMethod(<T>(() => { }));
+    }
 }

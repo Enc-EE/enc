@@ -178,7 +178,7 @@ export class Helper {
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
         var height = 50;
-        ctx.font = height + "px Garamond";
+        ctx.font = height + "px Georgia";
         ctx.fillText(text, 0, 0);
         var width = ctx.measureText(text).width;
         var imageData = ctx.getImageData(0, 0, width, height);
@@ -199,5 +199,33 @@ export class Helper {
         result.width = width;
         result.height = height;
         return result;
+    }
+
+    public static getImage(text: string, size: number, font: string, fillStyle: string): ImageData[] {
+        var canvas = document.createElement('canvas');
+        canvas.height = size;
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = fillStyle;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.font = size + "px Georgia";
+        var textSize = ctx.measureText(text);
+        var width = textSize.width;
+        canvas.width = width;
+        ctx.fillText(text, 0, 0);
+        canvas.toDataURL()
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        var imagePieces: ImageData[] = [];
+        for (let i = 0; i < imageData.data.length; i = i + 4) {
+            var r = imageData.data[i];
+            var g = imageData.data[i + 1];
+            var b = imageData.data[i + 2];
+            var a = imageData.data[i + 3];
+            if (a > 0) {
+                imageData.data[i + 3] = 0;
+            }
+        }
+        return imagePieces;
     }
 }
