@@ -9,6 +9,7 @@ export class ECanvas {
 
     private drawFunctions: DrawFunction[] = [];
     public dpr = 1;
+    public static cursorManipulation = true;
 
     public get width(): number {
         return this.canvas.clientWidth / this.dpr;
@@ -54,12 +55,14 @@ export class ECanvas {
     private static cursorLock: string = null;
 
     public static SetCursor = (name: string, pointer: boolean) => {
-        if (pointer) {
-            document.body.style.cursor = "pointer";
-            ECanvas.cursorLock = name;
-        } else if (name == ECanvas.cursorLock) {
-            document.body.style.cursor = "default";
-            ECanvas.cursorLock = null;
+        if (ECanvas.cursorManipulation) {
+            if (pointer) {
+                document.body.style.cursor = "pointer";
+                ECanvas.cursorLock = name;
+            } else if (name == ECanvas.cursorLock) {
+                document.body.style.cursor = "default";
+                ECanvas.cursorLock = null;
+            }
         }
     }
 

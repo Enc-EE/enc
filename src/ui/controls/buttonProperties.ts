@@ -1,5 +1,5 @@
 export class ButtonProperties {
-    public fontSize = 40;
+    public fontSize = 32;
     public fontPrefix = "";
     public fontFamily = "Georgia"
     public fillStyle = "grey";

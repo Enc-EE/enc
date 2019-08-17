@@ -8,7 +8,7 @@ export class EAnimation {
     private lastFrameTime: number;
     private fps: number;
     private fpsInterval: number;
-    private performanceWarningThreshold = 1.2;
+    private performanceWarningThreshold = 0.9;
     private performanceWarningDelayRuns = 8;
     private currentPerformanceWarningDelayRun = 0;
 
@@ -55,32 +55,53 @@ export class EAnimation {
         this.fpsInterval = 1000 / this.fps;
     }
 
-    private animationLoop = () => {
-        if (this.isRunning) {
-            requestAnimationFrame(this.animationLoop);
-        }
+    public fpsPerformance = 0;
+    private updateFpsPerformance = true;
 
+    private frameTimes: number[] = [];
+    public frameTime: number;
+    private frameTimesCount = 60;
+    private animationLoop = () => {
         var now = Date.now();
         var elapsed = now - this.lastFrameTime;
 
         if (elapsed > this.fpsInterval) {
+            if (this.isRunning) {
+                requestAnimationFrame(this.animationLoop);
+            }
             this.lastFrameTime = now;
-            var timeDiff = elapsed / 1000;
-
-            if ((elapsed / this.fpsInterval) - 1 > this.performanceWarningThreshold) {
-                console.log("Warning: low performance");
-                this.currentPerformanceWarningDelayRun++;
-                if (this.currentPerformanceWarningDelayRun > this.performanceWarningDelayRuns) {
-                    this.lowPerformance.dispatchEvent();
+            if (this.updateFpsPerformance) {
+                this.fpsPerformance = this.fpsInterval / elapsed;
+                if (this.fpsPerformance < this.performanceWarningThreshold) {
+                    console.log("Warning: low performance");
+                    this.currentPerformanceWarningDelayRun++;
+                    if (this.currentPerformanceWarningDelayRun > this.performanceWarningDelayRuns) {
+                        this.lowPerformance.dispatchEvent();
+                        this.currentPerformanceWarningDelayRun = 0;
+                    }
+                } else if (this.currentPerformanceWarningDelayRun > 0) {
                     this.currentPerformanceWarningDelayRun = 0;
                 }
-            } else if (this.currentPerformanceWarningDelayRun > 0) {
-                this.currentPerformanceWarningDelayRun = 0;
             }
+            this.updateFpsPerformance = true
+
+            var timeDiff = elapsed / 1000;
 
             for (const updateFunction of this.updateFunctions) {
                 updateFunction(timeDiff);
             }
+            var frameTime = Date.now() - now;
+            this.frameTimes.push(frameTime);
+            if (this.frameTimes.length > this.frameTimesCount) {
+                this.frameTimes.splice(0, 1);
+            }
+            this.frameTime = this.frameTimes.reduce((x, y) => x + y) / this.frameTimes.length;
+        } else { // request animation frame is faster then actual fps setting
+            this.fpsPerformance = this.fpsInterval / elapsed;
+            this.updateFpsPerformance = false
+            setTimeout(() => {
+                this.animationLoop();
+            }, this.fpsInterval - elapsed);
         }
     }
 }

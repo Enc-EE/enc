@@ -228,4 +228,42 @@ export class Helper {
         }
         return imagePieces;
     }
+
+    public static blur(imageData: ImageData, quadraticRadius: number) {
+        var tempCanvas = document.createElement("canvas");
+        tempCanvas.width = imageData.width;
+        tempCanvas.height = imageData.height;
+        var tempCtx = tempCanvas.getContext("2d");
+
+        var newImageData = tempCtx.createImageData(tempCanvas.width, tempCanvas.height);
+        for (let i = 0; i < imageData.data.length; i = i + 4) {
+            // var r = imageData.data[i];
+            // var g = imageData.data[i + 1];
+            // var b = imageData.data[i + 2];
+            // var a = imageData.data[i + 3];
+            var y = Math.floor(i / 4 / imageData.width);
+            var x = i / 4 - y * imageData.width;
+            var newR = 0;
+            var newG = 0;
+            var newB = 0;
+            var newA = 0;
+            var pixels = 0;
+            for (let blurY = y + -quadraticRadius; blurY < y + quadraticRadius + 1; blurY++) {
+                for (let blurX = x + -quadraticRadius; blurX < x + quadraticRadius + 1; blurX++) {
+                    if (blurY >= 0 && blurY < imageData.height && blurX >= 0 && blurX < imageData.width) {
+                        newR += imageData.data[(blurY * imageData.width + blurX) * 4];
+                        newG += imageData.data[(blurY * imageData.width + blurX) * 4 + 1];
+                        newB += imageData.data[(blurY * imageData.width + blurX) * 4 + 2];
+                        newA += imageData.data[(blurY * imageData.width + blurX) * 4 + 3];
+                        pixels++;
+                    }
+                }
+            }
+            newImageData.data[i] = newR / pixels;
+            newImageData.data[i + 1] = newG / pixels;
+            newImageData.data[i + 2] = newB / pixels;
+            newImageData.data[i + 3] = newA / pixels;
+        }
+        return newImageData;
+    }
 }

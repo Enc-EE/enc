@@ -1,7 +1,7 @@
 export class LabelProperties {
     public fontSize = 40;
     public fontPrefix = "";
-    public fontFamily = "fontawesome";
+    public fontFamily = "Georgia";
     public fillStyle = "blue";
     public backgroundFillStyle: string = undefined;
 

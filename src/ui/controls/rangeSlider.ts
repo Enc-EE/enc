@@ -1,8 +1,10 @@
 import { Control } from "./control";
 import { Rectangle } from "../../geometry/rectangle";
 import { EEventTT } from "../../eEvent";
+import { SliderProperties } from "./sliderProperties";
 
 export class RangeSlider extends Control {
+    public properties = new SliderProperties();
     public radius: number = 10;
 
     public minValue = 0;
@@ -25,14 +27,14 @@ export class RangeSlider extends Control {
         var x = this.dimensions.x;
         var y = this.dimensions.y;
 
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = this.properties.color1;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x + this.radius, y + this.dimensions.height / 2);
         ctx.lineTo(x + this.dimensions.width - this.radius, y + this.dimensions.height / 2);
         ctx.stroke();
 
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = this.properties.color2;
         var sliderY = y + this.dimensions.height / 2;
 
         var relValueLow = (this.currentValueLow - this.minValue) / (this.maxValue - this.minValue);
@@ -41,7 +43,7 @@ export class RangeSlider extends Control {
         var relValueHigh = (this.currentValueHigh - this.minValue) / (this.maxValue - this.minValue);
         var highX = x + this.radius + (this.dimensions.width - this.radius * 2) * relValueHigh;
 
-        ctx.strokeStyle = "blue";
+        ctx.strokeStyle = this.properties.color2;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(lowX, sliderY);
@@ -65,6 +67,31 @@ export class RangeSlider extends Control {
         this.dimensions = new Rectangle(bounds.x, bounds.y, 200, this.radius * 2);
     }
 
+    public click = (ev: MouseEvent) => {
+        if (ev.ctrlKey) {
+            if (this.dimensions.isHitBy(ev.clientX, ev.clientY)) {
+                var val = this.getClickedValue(ev);
+                var diffToLow = Math.abs(this.currentValueLow - val);
+                var diffToHigh = Math.abs(this.currentValueHigh - val);
+    
+                if (diffToLow == diffToHigh) {
+                    if (val < this.currentValueLow) {
+                        this.isDraggingLow = true;
+                    } else {
+                        this.isDraggingHigh = true;
+                    }
+                }
+                else if (diffToLow > diffToHigh) {
+                    this.isDraggingHigh = true;
+                }
+                else {
+                    this.isDraggingLow = true;
+                }
+    
+                this.updateCurrentValues(ev);
+            }
+        }
+    }
     public mouseDown = (ev: MouseEvent) => {
         if (this.dimensions.isHitBy(ev.clientX, ev.clientY)) {
             var val = this.getClickedValue(ev);

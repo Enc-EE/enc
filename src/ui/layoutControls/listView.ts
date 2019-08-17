@@ -9,6 +9,10 @@ import { Orientation } from "../alignement/orientation";
 export class ListView extends LayoutView {
     public properties = new ListViewProperties();
 
+    public get items() {
+        return this.children;
+    }
+
     public addItem = (layoutView: RenderObject) => {
         layoutView.alignement.horizontalAlign = HorizontalAlignementOption.Left;
         layoutView.alignement.verticalAlign = VerticalAlignementOption.Top;

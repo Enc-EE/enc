@@ -1,7 +1,6 @@
 import { ECanvas } from "./eCanvas";
 import { Rectangle } from "../geometry/rectangle";
 import { LayoutView } from "./layoutControls/layoutView";
-import { EAnimation } from "../eAnimation";
 
 export class Stage {
     private view: LayoutView;
@@ -11,11 +10,8 @@ export class Stage {
     constructor(private canvas: ECanvas) {
         canvas.addDrawFunction(this.render);
         canvas.resized.addEventListener(this.canvasResized);
-        document.addEventListener("click", this.click);
         document.addEventListener("touchstart", this.touchMode);
-        document.addEventListener("mousedown", this.mouseDown);
-        document.addEventListener("mouseup", this.mouseUp);
-        document.addEventListener("mousemove", this.mouseMove);
+        this.addMouseListeners();
     }
 
     private canvasResized = () => {
@@ -24,21 +20,23 @@ export class Stage {
 
     private touchMode = (ev: TouchEvent) => {
         if (!this.isTouchMode) {
+            console.log("switching to touch mode");
+            ECanvas.cursorManipulation = false;
             this.isTouchMode = true;
-            document.removeEventListener("mouseup", this.mouseUp);
-            document.removeEventListener("mousemove", this.mouseMove);
-            document.removeEventListener("mousedown", this.mouseDown);
-            document.addEventListener("mousedown", this.mouseMode);
+            this.removeMouseListeners();
+            this.addTouchListeners();
+            document.body.addEventListener("mousedown", this.mouseMode);
             document.removeEventListener("touchstart", this.touchMode);
         }
     }
-    
+
     private mouseMode = (ev: TouchEvent) => {
         if (this.isTouchMode) {
+            console.log("switching to mouse mode");
+            ECanvas.cursorManipulation = true;
             this.isTouchMode = false;
-            document.addEventListener("mouseup", this.mouseUp);
-            document.addEventListener("mousemove", this.mouseMove);
-            document.addEventListener("mousedown", this.mouseDown);
+            this.addMouseListeners();
+            this.removeTouchListeners();
             document.addEventListener("touchstart", this.touchMode);
             document.removeEventListener("mousedown", this.mouseMode);
         }
@@ -46,8 +44,6 @@ export class Stage {
 
     private mouseDown = (ev: MouseEvent) => {
         if (this.view) {
-            // console.log("hi");
-
             this.view.mouseDown({
                 clientX: ev.clientX / this.canvas.dpr,
                 clientY: ev.clientY / this.canvas.dpr,
@@ -108,5 +104,51 @@ export class Stage {
     public setView = (view: LayoutView) => {
         this.view = view;
         this.shouldUpdateLayout = true;
+    }
+
+    private removeMouseListeners() {
+        document.removeEventListener("mouseup", this.mouseUp);
+        document.removeEventListener("mousemove", this.mouseMove);
+        document.removeEventListener("mousedown", this.mouseDown);
+        document.removeEventListener("click", this.click);
+    }
+
+    private addMouseListeners() {
+        document.addEventListener("mouseup", this.mouseUp);
+        document.addEventListener("mousemove", this.mouseMove);
+        document.addEventListener("mousedown", this.mouseDown);
+        document.addEventListener("click", this.click);
+    }
+
+    private removeTouchListeners() {
+        document.removeEventListener("touchend", this.mouseUp);
+        document.removeEventListener("touchmove", this.mouseMove);
+        document.removeEventListener("touchstart", this.click);
+    }
+
+    private addTouchListeners() {
+        document.addEventListener("touchend", (touch) => { touch.preventDefault(); this.mouseUp(this.touchToMouse(touch)) });
+        document.addEventListener("touchmove", (touch) => { if (touch.touches.length > 0) { this.mouseMove(this.touchToMouse(touch)) } });
+        document.addEventListener("touchstart", (touch) => { if (touch.touches.length > 0) { this.click(this.touchToMouse(touch)); } });
+    }
+
+    private touchToMouse = (touchEvent: TouchEvent): MouseEvent => {
+        if (touchEvent.touches.length > 0) {
+            return {
+                clientX: touchEvent.touches[0].clientX / this.canvas.dpr,
+                clientY: touchEvent.touches[0].clientY / this.canvas.dpr,
+                altKey: touchEvent.altKey,
+                ctrlKey: true,
+                shiftKey: touchEvent.shiftKey
+            } as MouseEvent;
+        } else {
+            return {
+                clientX: 0,
+                clientY: 0,
+                altKey: touchEvent.altKey,
+                ctrlKey: true,
+                shiftKey: touchEvent.shiftKey
+            } as MouseEvent;
+        }
     }
 }

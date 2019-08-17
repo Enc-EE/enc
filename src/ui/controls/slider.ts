@@ -1,8 +1,11 @@
 import { Control } from "./control";
 import { Rectangle } from "../../geometry/rectangle";
 import { EEventT } from "../../eEvent";
+import { SliderProperties } from "./sliderProperties";
 
 export class Slider extends Control {
+    public properties = new SliderProperties();
+
     public radius: number = 10;
 
     public minValue = 0;
@@ -19,7 +22,7 @@ export class Slider extends Control {
     public render = (ctx: CanvasRenderingContext2D): void => {
         var x = this.dimensions.x;
         var y = this.dimensions.y;
-        ctx.strokeStyle = "white";
+        ctx.strokeStyle = this.properties.color1;
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(x + this.radius, y + this.dimensions.height / 2);
@@ -27,7 +30,7 @@ export class Slider extends Control {
         ctx.stroke();
 
         var relValue = (this.currentValue - this.minValue) / (this.maxValue - this.minValue);
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = this.properties.color2;
         ctx.beginPath();
         ctx.arc(x + this.radius + (this.dimensions.width - this.radius * 2) * relValue, y + this.dimensions.height / 2, this.radius, 0, Math.PI * 2);
         ctx.closePath();
@@ -44,6 +47,14 @@ export class Slider extends Control {
         if (this.dimensions.isHitBy(ev.clientX, ev.clientY)) {
             this.isDragging = true;
             this.updateCurrentValue(ev);
+        }
+    }
+    public click = (ev: MouseEvent) => {
+        if (ev.ctrlKey) {
+            if (this.dimensions.isHitBy(ev.clientX, ev.clientY)) {
+                this.isDragging = true;
+                this.updateCurrentValue(ev);
+            }
         }
     }
     public mouseUp = (ev: MouseEvent) => {
