@@ -4,10 +4,10 @@ export class Http {
     public get = (url: string): Promise<string> => {
         return this.request("GET", url, null);
     }
-    public put = (url: string, data: string): Promise<string> => {
+    public put = (url: string, data?: string): Promise<string> => {
         return this.request("PUT", url, data);
     }
-    public post = (url: string, data: string): Promise<string> => {
+    public post = (url: string, data?: string): Promise<string> => {
         return this.request("POST", url, data)
     }
     public delete = (url: string): Promise<string> => {
