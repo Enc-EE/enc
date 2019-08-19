@@ -4,9 +4,6 @@ import { EEvent } from "../eEvent";
 export type DrawFunction = (ctx: CanvasRenderingContext2D, width?: number, height?: number) => void;
 
 export class ECanvas {
-    private canvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
-
     private drawFunctions: DrawFunction[] = [];
     public dpr = 1;
     public static cursorManipulation = true;
@@ -31,10 +28,25 @@ export class ECanvas {
 
     public resized = new EEvent()
 
-    private constructor() { }
+    private constructor(private canvas: HTMLCanvasElement, private ctx: CanvasRenderingContext2D) { }
 
-    public static createFullScreen(): ECanvas {
-        document.body.parentElement.style.height = "100%";
+    public static createInCanvas(canvasElement: HTMLCanvasElement): ECanvas | undefined {
+        var ctx = canvasElement.getContext('2d');
+        if (ctx) {
+            var enCanvas = new ECanvas(canvasElement, ctx);
+            window.addEventListener("resize", enCanvas.resize);
+            enCanvas.resize();
+            return enCanvas;
+        } else {
+            console.log("error: 1908191832");
+            alert("Sorry, there was some strange issue :(")
+        }
+    }
+
+    public static createFullScreen(): ECanvas | undefined {
+        if (document.body.parentElement) {
+            document.body.parentElement.style.height = "100%";
+        }
         document.body.style.height = "100%";
         document.body.style.margin = "0";
         document.body.style.overflow = "hidden";
@@ -44,15 +56,19 @@ export class ECanvas {
         canvas.style.width = "100%"
         canvas.style.height = "100%";
 
-        var enCanvas = new ECanvas();
-        enCanvas.canvas = canvas;
-        enCanvas.ctx = canvas.getContext('2d');
-        window.addEventListener("resize", enCanvas.resize);
-        enCanvas.resize();
-        return enCanvas;
+        var ctx = canvas.getContext('2d');
+        if (ctx) {
+            var enCanvas = new ECanvas(canvas, ctx);
+            window.addEventListener("resize", enCanvas.resize);
+            enCanvas.resize();
+            return enCanvas;
+        } else {
+            console.log("error: 190820191832");
+            alert("Sorry, there was some strange issue :(")
+        }
     }
 
-    private static cursorLock: string = null;
+    private static cursorLock: string | null = null;
 
     public static SetCursor = (name: string, pointer: boolean) => {
         if (ECanvas.cursorManipulation) {
