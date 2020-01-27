@@ -13,8 +13,8 @@ export class RangeSlider extends Control {
     public currentValueHigh = 75;
     public minDiff = 0.1;
 
-    private isDraggingLow: boolean;
-    private isDraggingHigh: boolean;
+    private isDraggingLow: boolean = false;
+    private isDraggingHigh: boolean = false;
 
     public valuesChanged = new EEventTT<number, number>();
 

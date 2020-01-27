@@ -1,9 +1,9 @@
 import { AudioGraphNode } from "./audioGraphNode";
 
 export class AudioGraphNodeStreamSource extends AudioGraphNode {
-    source: MediaStreamAudioSourceNode;
+    source: MediaStreamAudioSourceNode | undefined;
 
-    public getAudioNode = (): AudioNode => {
+    public getAudioNode = (): AudioNode | undefined => {
         return this.source;
     }
 

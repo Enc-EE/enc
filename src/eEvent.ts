@@ -1,3 +1,23 @@
+export class CallDelay {
+    public delayTime = 0;
+    private lastCall = Date.now();
+    private waiter: NodeJS.Timeout | undefined;
+
+    public delayCall = (action: () => void) => {
+        if (Date.now() - this.lastCall >= this.delayTime * 1000) {
+            this.lastCall = Date.now();
+            action();
+        } else {
+            if (this.waiter) {
+                clearTimeout(this.waiter);
+            }
+            this.waiter = setTimeout(() => {
+                this.delayCall(action);
+            }, this.delayTime * 1000 - (Date.now() - this.lastCall));
+        }
+    }
+}
+
 export class EEvent {
     private listeners: (() => void)[] = [];
 

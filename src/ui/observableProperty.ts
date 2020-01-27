@@ -1,14 +1,17 @@
-import { EEventT, EEventTT } from "../eEvent";
+import { EEventTT, CallDelay } from "../eEvent";
 
 export class ObservableProperty<T> {
     constructor(private value: T) { }
 
-    public OnChanged = new EEventTT<T, T>();
+    public onChangedDelay = new CallDelay();
+    public onChanged = new EEventTT<T, T>();
 
     public set = (value: T) => {
-        var oldValue = this.value;
-        this.value = value;
-        this.OnChanged.dispatchEvent(oldValue, this.value);
+        this.onChangedDelay.delayCall(() =>{
+            var oldValue = this.value;
+            this.value = value;
+            this.onChanged.dispatchEvent(oldValue, this.value);
+        })
     }
 
     public get = (): T => {

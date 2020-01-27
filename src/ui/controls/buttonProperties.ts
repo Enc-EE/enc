@@ -4,7 +4,7 @@ export class ButtonProperties {
     public fontFamily = "Georgia"
     public fillStyle = "grey";
     public mouseOverFillStyle = "red";
-    public backgroundFillStyle: string = undefined;
+    public backgroundFillStyle: string | undefined = undefined;
 
     public getFont = () => {
         var font = "";

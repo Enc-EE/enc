@@ -5,7 +5,7 @@ import { LabelProperties } from "./labelProperties";
 export class Label extends Control {
     public properties = new LabelProperties();
 
-    public text: string;
+    public text: string = "";
 
     constructor() {
         super();

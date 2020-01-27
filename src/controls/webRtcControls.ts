@@ -4,10 +4,10 @@ import { EEventTT } from "../eEvent";
 export class WebRtcControls implements Controller {
     xAxes: number = 0;
     yAxes: number = 0;
-    name: string;
-    start: boolean;
+    name: string = "";
+    start: boolean = false;
     a: boolean = false;
-    signal: EEventTT<Controller, string>;
+    signal: EEventTT<Controller, string> = new EEventTT<Controller, string>();
     type: ControllerType;
 
     constructor(dataChannel: RTCDataChannel) {

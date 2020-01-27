@@ -1,11 +1,11 @@
 import { AudioGraphNode } from "./audioGraphNode";
 
 export class AudioGraphNodeAnalyser extends AudioGraphNode {
-    analyserNode: AnalyserNode;
-    bufferLength: number;
-    dataArray: Uint8Array;
+    analyserNode: AnalyserNode | undefined;
+    bufferLength: number = 0;
+    dataArray: Uint8Array = new Uint8Array(this.bufferLength)
 
-    public getAudioNode = (): AudioNode => {
+    public getAudioNode = (): AudioNode | undefined => {
         return this.analyserNode;
     }
 

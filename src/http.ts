@@ -2,7 +2,7 @@ export class Http {
     public headers: { name: string, value: string }[] = [];
 
     public get = (url: string): Promise<string> => {
-        return this.request("GET", url, null);
+        return this.request("GET", url);
     }
     public put = (url: string, data?: string): Promise<string> => {
         return this.request("PUT", url, data);
@@ -11,7 +11,7 @@ export class Http {
         return this.request("POST", url, data)
     }
     public delete = (url: string): Promise<string> => {
-        return this.request("DELETE", url, null)
+        return this.request("DELETE", url)
     }
 
     private request = (method: string, url: string, data?: string): Promise<string> => {

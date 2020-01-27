@@ -13,48 +13,72 @@ export class GamepadControls implements Controller {
     public get xAxes(): number {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return 0
+        }
         return gp.axes[0];
     }
 
     public get yAxes(): number {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return 0
+        }
         return gp.axes[1];
     }
 
     public get start(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[9].pressed;
     }
 
     public get a(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[0].pressed;
     }
 
     public get up(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[12].pressed;
     }
 
     public get right(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[15].pressed;
     }
 
     public get down(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[13].pressed;
     }
 
     public get left(): boolean {
         var gamepads = navigator.getGamepads();
         var gp = gamepads[this.index];
+        if (!gp) {
+            return false
+        }
         return gp.buttons[14].pressed;
     }
 
@@ -63,7 +87,7 @@ export class GamepadControls implements Controller {
     }
 
     private timeout = 0.5;
-    private signalingTimers: { [id: string]: number } = {};
+    private signalingTimers: { [id: string]: number | undefined } = {};
 
     private signalListener = () => {
         requestAnimationFrame(this.signalListener);
@@ -84,11 +108,12 @@ export class GamepadControls implements Controller {
 
     private checkSignal = (isPressed: boolean, signal: Signals, now: number) => {
         if (isPressed) {
-            if (!this.signalingTimers[signal]) {
+            const signalingTimer = this.signalingTimers[signal];
+            if (!signalingTimer) {
                 this.signalingTimers[signal] = Date.now();
                 this.signal.dispatchEvent(this, signal);
             }
-            else if ((now - this.signalingTimers[signal]) / 1000 >= this.timeout) {
+            else if ((now - signalingTimer) / 1000 >= this.timeout) {
                 this.signal.dispatchEvent(this, signal);
             }
         }

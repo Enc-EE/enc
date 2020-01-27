@@ -5,9 +5,9 @@ export type UpdateFunction = (timeDiff: number) => void;
 export class EAnimation {
     private updateFunctions: UpdateFunction[] = [];
     private isRunning = false;
-    private lastFrameTime: number;
-    private fps: number;
-    private fpsInterval: number;
+    private lastFrameTime: number = 0;
+    private fps: number = 30;
+    private fpsInterval: number = 1000 / 30;
     private performanceWarningThreshold = 0.9;
     private performanceWarningDelayRuns = 8;
     private currentPerformanceWarningDelayRun = 0;
@@ -59,7 +59,7 @@ export class EAnimation {
     private updateFpsPerformance = true;
 
     private frameTimes: number[] = [];
-    public frameTime: number;
+    public frameTime: number = 0;
     private frameTimesCount = 60;
     private animationLoop = () => {
         var now = Date.now();

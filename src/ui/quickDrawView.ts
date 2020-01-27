@@ -6,7 +6,7 @@ export class QuickDrawView extends RenderObject {
     }
     mouseUp(ev: MouseEvent): void {
     }
-    public bounds: Rectangle;
+    public bounds: Rectangle = new Rectangle(0, 0, 0, 0);
 
     constructor(renderMethod: (ctx: CanvasRenderingContext2D, bounds: Rectangle) => void) {
         super();

@@ -9,8 +9,8 @@ export abstract class RenderObject {
         RenderObject.idCounter++;
         return RenderObject.idCounter;
     }
-    startTime: number;
-    duration: number;
+    startTime: number = 0;
+    duration: number = 1;
 
     constructor() {
         this.id = this.generateNewId();
@@ -28,7 +28,7 @@ export abstract class RenderObject {
 
     private shouldUpdateLayout = false;
 
-    private _renderMethodManipulation: MethodManipulation<(ctx: CanvasRenderingContext2D) => void>;
+    private _renderMethodManipulation: MethodManipulation<(ctx: CanvasRenderingContext2D) => void> | undefined;
     public get renderMethodManipulation(): MethodManipulation<(ctx: CanvasRenderingContext2D) => void> {
         if (!this._renderMethodManipulation) {
             this._renderMethodManipulation = new MethodManipulation(this, this.render, (render) => this.render = render);

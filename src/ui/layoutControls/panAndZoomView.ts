@@ -8,8 +8,8 @@ export class PanAndZoomView extends LayoutView {
     protected zoom: number = 1;
     private offsetX: number = 0;
     private offsetY: number = 0;
-    private isDragging: boolean;
-    private oldPosition: Point;
+    private isDragging: boolean = false;
+    private oldPosition: Point | undefined;
 
     public addChild = (child: RenderObject) => {
         this.children.push(child);
@@ -70,8 +70,8 @@ export class PanAndZoomView extends LayoutView {
 
     }
 
-    protected getPazPoint = (point: Point): Point => {
-        var p: Point = null;
+    protected getPazPoint = (point: Point): Point | null => {
+        var p: Point | null = null;
         if (this.bounds) {
             if (this.bounds.isHitBy(point.x, point.y)) {
                 var viewX = point.x - this.bounds.x - this.offsetX;
@@ -85,8 +85,7 @@ export class PanAndZoomView extends LayoutView {
     }
 
     public mouseMove(ev: MouseEvent) {
-        if (this.isDragging) {
-
+        if (this.isDragging && this.oldPosition) {
             this.offsetX += ev.clientX - this.oldPosition.x
             this.offsetY += ev.clientY - this.oldPosition.y
             this.oldPosition = {

@@ -5,7 +5,7 @@ import { ButtonProperties } from "./buttonProperties";
 export class Button extends Control {
 
     public properties = new ButtonProperties();
-    public text: string;
+    public text: string = "";
 
     public render = (ctx: CanvasRenderingContext2D) => {
         if (this.properties.backgroundFillStyle) {

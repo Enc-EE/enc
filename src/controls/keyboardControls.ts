@@ -4,7 +4,7 @@ import { EEventTT } from "../eEvent";
 export class KeyboardControls implements Controller {
     type: ControllerType;
     signal: EEventTT<Controller, string>;
-    public a: boolean;
+    public a: boolean = false;
     public xAxes: number;
     public yAxes: number;
 

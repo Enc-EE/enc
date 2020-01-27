@@ -11,7 +11,7 @@ export class Slider extends Control {
     public minValue = 0;
     public maxValue = 100;
     public currentValue = 50;
-    isDragging: boolean;
+    isDragging: boolean = false;
 
     public valueChanged = new EEventT<number>();
 

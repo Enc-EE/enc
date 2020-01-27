@@ -3,7 +3,7 @@ export class LabelProperties {
     public fontPrefix = "";
     public fontFamily = "Georgia";
     public fillStyle = "blue";
-    public backgroundFillStyle: string = undefined;
+    public backgroundFillStyle: string | undefined = undefined;
 
     public getFont = () => {
         var font = "";

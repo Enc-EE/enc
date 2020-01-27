@@ -5,7 +5,7 @@ export class AudioGraphNodeElementSource extends AudioGraphNode {
     public url: string;
     public audioEnded = new EEvent();
 
-    private source: MediaElementAudioSourceNode;
+    private source: MediaElementAudioSourceNode | undefined;
     private audio: HTMLAudioElement;
 
     constructor(name: string, audioCtx: AudioContext, url: string) {
@@ -22,7 +22,7 @@ export class AudioGraphNodeElementSource extends AudioGraphNode {
         this.audioEnded.dispatchEvent();
     }
 
-    public getAudioNode = (): AudioNode => {
+    public getAudioNode = (): AudioNode | undefined => {
         return this.source;
     }
 

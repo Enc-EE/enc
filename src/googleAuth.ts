@@ -14,11 +14,11 @@ namespace gapi.auth2 {
 }
 
 export class GoogleAuth {
-    private auth2: gapi.auth2.GoogleAuth;
-    private loginDiv: HTMLDivElement;
-    private logoutDiv: HTMLDivElement;
+    private auth2: gapi.auth2.GoogleAuth | undefined;
+    private loginDiv: HTMLDivElement | undefined;
+    private logoutDiv: HTMLDivElement | undefined;
 
-    private isInitialized: boolean;
+    private isInitialized: boolean = false;
 
     public loggedOut: EEvent = new EEvent();
     public loggedIn: EEventT<gapi.auth2.GoogleUser> = new EEventT<gapi.auth2.GoogleUser>();
@@ -44,22 +44,28 @@ export class GoogleAuth {
     }
 
     private loginDivClick = () => {
-        this.auth2.signIn({ redirect_uri: window.location.href, scope: "profile" }).then((googleUser: gapi.auth2.GoogleUser) => {
-            console.log('login successful');
-            this.loggedIn.dispatchEvent(googleUser);
-        });
+        if (this.auth2) {
+            this.auth2.signIn({ redirect_uri: window.location.href, scope: "profile" }).then((googleUser: gapi.auth2.GoogleUser) => {
+                console.log('login successful');
+                this.loggedIn.dispatchEvent(googleUser);
+            });
+        }
     }
 
     private logoutDivClick = () => {
-        this.auth2.signOut().then(() => {
-            console.log('logout successful');
-            this.loggedOut.dispatchEvent();
-        });
+        if (this.auth2) {
+            this.auth2.signOut().then(() => {
+                console.log('logout successful');
+                this.loggedOut.dispatchEvent();
+            });
+        }
     }
 
     public login = () => {
         if (this.isInitialized) {
-            this.loginDiv.click();
+            if (this.loginDiv) {
+                this.loginDiv.click();
+            }
         } else {
             console.log("oauth2 was not initialized yet");
         }
@@ -67,7 +73,9 @@ export class GoogleAuth {
 
     public logout = () => {
         if (this.isInitialized) {
-            this.logoutDiv.click();
+            if (this.logoutDiv) {
+                this.logoutDiv.click();
+            }
         } else {
             console.log("oauth2 was not initialized yet");
         }

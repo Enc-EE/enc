@@ -17,17 +17,16 @@ export class AudioGraph {
     public destinationNode: AudioGraphNode;
 
     constructor() {
-        try {
-            this.audioCtx = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
-            this.audioCtx.addEventListener("statechange", this.audioContextStateChangedEvaluator);
-            if (this.audioCtx.state === "suspended") {
-                document.addEventListener("click", this.documentClick);
-                console.log("Audio context is suspended. Click the dom to make it running.");
-            }
-            this.destinationNode = new AudioGraphNodeDestination("destination", this.audioCtx);
-        } catch (error) {
-            throw "It looks like your browser does not support web audio API :(";
+        this.audioCtx = new ((window as any).AudioContext || (window as any).webkitAudioContext)();
+        if (!this.audioCtx) {
+            alert("It seems that your device doesn't support Web Audio API")
         }
+        this.audioCtx.addEventListener("statechange", this.audioContextStateChangedEvaluator);
+        if (this.audioCtx.state === "suspended") {
+            document.addEventListener("click", this.documentClick);
+            console.log("Audio context is suspended. Click the dom to make it running.");
+        }
+        this.destinationNode = new AudioGraphNodeDestination("destination", this.audioCtx);
     }
 
     public addMediaElementSource = (name: string, url: string) => {
@@ -81,7 +80,7 @@ export class AudioGraph {
         }
     }
 
-    public reload = () => {
+    public reload = (): Promise<void> => {
         return new Promise((resolve, reject) => {
             console.log("realoading audio graph");
             Promise.all(this.audioNodes.map(x => x.reload()))
@@ -89,12 +88,21 @@ export class AudioGraph {
                     console.log("reloaded audio graph");
                     for (let i = 0; i < this.audioNodes.length; i++) {
                         const audioNode = this.audioNodes[i];
-                        audioNode.getAudioNode().disconnect();
+                        var subAudioNode = audioNode.getAudioNode()
+                        if (subAudioNode) {
+                            subAudioNode.disconnect();
 
-                        if (i < this.audioNodes.length - 1) {
-                            audioNode.getAudioNode().connect(this.audioNodes[i + 1].getAudioNode());
-                        } else {
-                            audioNode.getAudioNode().connect(this.destinationNode.getAudioNode());
+                            if (i < this.audioNodes.length - 1) {
+                                var x = this.audioNodes[i + 1].getAudioNode()
+                                if (x) {
+                                    subAudioNode.connect(x);
+                                }
+                            } else {
+                                var y = this.destinationNode.getAudioNode()
+                                if (y) {
+                                    subAudioNode.connect(y);
+                                }
+                            }
                         }
                     }
                     resolve();

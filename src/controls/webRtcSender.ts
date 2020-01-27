@@ -2,7 +2,7 @@ import { KeyboardControls } from "./keyboardControls";
 import { EAnimation } from "../eAnimation";
 
 export class WebRtcSender {
-    keyboardControls: KeyboardControls;
+    keyboardControls: KeyboardControls | undefined;
     constructor(private dataChannel: RTCDataChannel) {
         var animation = new EAnimation();
         animation.addUpdateFunction(this.update);
@@ -18,17 +18,20 @@ export class WebRtcSender {
     }
 
     public draw = (ctx: CanvasRenderingContext2D, width?: number, height?: number) => {
-        ctx.clearRect(0, 0, width, height);
-
-        ctx.fillStyle = "black";
-        for (let i = 0; i < this.ongoingTouches.length; i++) {
-            const touch = this.ongoingTouches[i];
-            this.x = touch.clientX / width * 2 - 1
-            this.y = touch.clientY / height * 2 - 1
-
-            ctx.beginPath();
-            ctx.arc(touch.clientX, touch.clientY, 50, 0, Math.PI * 2);
-            ctx.fill();
+        if (width && height) {
+            ctx.clearRect(0, 0, width, height);
+    
+            ctx.fillStyle = "black";
+            for (let i = 0; i < this.ongoingTouches.length; i++) {
+                const touch = this.ongoingTouches[i];
+                this.x = touch.clientX / width * 2 - 1
+                this.y = touch.clientY / height * 2 - 1
+    
+                ctx.beginPath();
+                ctx.arc(touch.clientX, touch.clientY, 50, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
         }
     }
 
@@ -36,7 +39,7 @@ export class WebRtcSender {
         document.addEventListener("touchstart", this.handleStart, false);
         document.addEventListener("touchend", this.handleEnd, false);
         document.addEventListener("touchcancel", this.handleCancel, false);
-        document.addEventListener("touchleave", this.handleEnd, false);
+        // document.addEventListener("touchleave", this.handleEnd, false);
         document.addEventListener("touchmove", this.handleMove, false);
     }
 

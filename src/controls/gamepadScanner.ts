@@ -1,7 +1,7 @@
 import { EEventT } from "../eEvent";
 
 export class GamepadScanner {
-    private gamepadScanner: NodeJS.Timeout;
+    private gamepadScanner: NodeJS.Timeout | undefined;
     private gamepads: Gamepad[] = [];
 
     constructor() {
@@ -14,7 +14,9 @@ export class GamepadScanner {
     }
 
     public stop() {
-        clearInterval(this.gamepadScanner);
+        if (this.gamepadScanner) {
+            clearInterval(this.gamepadScanner);
+        }
     }
 
     public reset() {
@@ -24,10 +26,11 @@ export class GamepadScanner {
     private scangamepads = () => {
         var gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
         for (var i = 0; i < gamepads.length; i++) {
-            if (gamepads[i]) {
-                if (!(gamepads[i].index in this.gamepads) && gamepads[i].buttons.length >= 16) {
-                    this.gamepads[gamepads[i].index] = gamepads[i];
-                    this.scannedGamepad.dispatchEvent(gamepads[i]);
+            var gamepad = gamepads[i]
+            if (gamepad) {
+                if (!(gamepad.index in this.gamepads) && gamepad.buttons.length >= 16) {
+                    this.gamepads[gamepad.index] = gamepad;
+                    this.scannedGamepad.dispatchEvent(gamepad);
                 }
             }
         }

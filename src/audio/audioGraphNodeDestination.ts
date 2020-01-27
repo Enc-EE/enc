@@ -6,6 +6,6 @@ export class AudioGraphNodeDestination extends AudioGraphNode {
     }
 
     public reload(): Promise<void> {
-        return;
+        return Promise.resolve();
     }
 }

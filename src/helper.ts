@@ -9,7 +9,9 @@ export class Helper {
             tempCanvas.height = image.naturalHeight;
 
             var tempCtx = tempCanvas.getContext("2d");
-
+            if (!tempCtx) {
+                return
+            }
             tempCtx.drawImage(image, 0, 0);
             var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
 
@@ -80,6 +82,9 @@ export class Helper {
         tempCanvas.height = image.naturalHeight;
 
         var tempCtx = tempCanvas.getContext("2d");
+        if (!tempCtx) {
+            return
+        }
 
         tempCtx.drawImage(image, 0, 0);
         var imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
@@ -148,6 +153,9 @@ export class Helper {
             tempCanvas.height = image.naturalHeight;
 
             var tempCtx = tempCanvas.getContext("2d");
+            if (!tempCtx) {
+                return
+            }
 
             tempCtx.drawImage(image, 0, 0);
             callback(tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height));
@@ -172,6 +180,9 @@ export class Helper {
         canvas.width = 1000;
         canvas.height = 200;
         var ctx = canvas.getContext('2d');
+        if (!ctx) {
+            return
+        }
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "white";
@@ -206,6 +217,9 @@ export class Helper {
         canvas.height = size;
         var ctx = canvas.getContext('2d');
 
+        if (!ctx) {
+            return []
+        }
         ctx.fillStyle = fillStyle;
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
@@ -234,6 +248,9 @@ export class Helper {
         tempCanvas.width = imageData.width;
         tempCanvas.height = imageData.height;
         var tempCtx = tempCanvas.getContext("2d");
+        if (!tempCtx) {
+            return
+        }
 
         var newImageData = tempCtx.createImageData(tempCanvas.width, tempCanvas.height);
         for (let i = 0; i < imageData.data.length; i = i + 4) {

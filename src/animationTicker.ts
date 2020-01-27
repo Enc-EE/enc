@@ -1,5 +1,5 @@
 export class AnimationTicker {
-    lastFrameTime: number;
+    lastFrameTime: number = 0;
     constructor(private intervalMs: number, private func: () => void) { }
 
     public update = (timeDiff: number) => {

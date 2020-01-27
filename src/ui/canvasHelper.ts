@@ -42,12 +42,18 @@ export class CanvasHelper {
             tempCanvas.width = 20;
             tempCanvas.height = 20;
             var tempCtx = tempCanvas.getContext('2d');
+            if (!tempCtx) {
+                return
+            }
             tempCtx.font = font;
             tempCtx.fillStyle = "black";
             tempCtx.textAlign = "left";
             tempCtx.textBaseline = "top";
 
             var checkLoaded = () => {
+                if (!tempCtx) {
+                    return
+                }
                 var icon1PixelCount = this.getIconPixels(tempCtx, tempCanvas, icon1);
                 var icon2PixelCount = this.getIconPixels(tempCtx, tempCanvas, icon2);
 

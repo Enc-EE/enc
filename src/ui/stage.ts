@@ -3,8 +3,8 @@ import { Rectangle } from "../geometry/rectangle";
 import { LayoutView } from "./layoutControls/layoutView";
 
 export class Stage {
-    private view: LayoutView;
-    private shouldUpdateLayout: boolean;
+    private view: LayoutView | undefined;
+    private shouldUpdateLayout: boolean = false;
     private isTouchMode = false;
 
     constructor(private canvas: ECanvas) {
@@ -30,7 +30,7 @@ export class Stage {
         }
     }
 
-    private mouseMode = (ev: TouchEvent) => {
+    private mouseMode = (ev: MouseEvent) => {
         if (this.isTouchMode) {
             console.log("switching to mouse mode");
             ECanvas.cursorManipulation = true;
@@ -91,7 +91,7 @@ export class Stage {
     }
 
     private render = (ctx: CanvasRenderingContext2D, width?: number, height?: number) => {
-        if (this.view) {
+        if (this.view && width && height) {
             if (this.shouldUpdateLayout) {
                 this.view.updateLayout(ctx, new Rectangle(0, 0, width, height));
                 this.shouldUpdateLayout = false;
@@ -121,9 +121,11 @@ export class Stage {
     }
 
     private removeTouchListeners() {
-        document.removeEventListener("touchend", this.mouseUp);
-        document.removeEventListener("touchmove", this.mouseMove);
-        document.removeEventListener("touchstart", this.click);
+        console.log("Waaaaaaah");
+        
+        // document.removeEventListener("touchend", this.mouseUp);
+        // document.removeEventListener("touchmove", this.mouseMove);
+        // document.removeEventListener("touchstart", this.click);
     }
 
     private addTouchListeners() {
